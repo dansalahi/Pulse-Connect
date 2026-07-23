@@ -1,0 +1,14 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Main window only. core:default — basic Tauri runtime IPC for all custom commands. core:window:allow-set-focus / allow-create — window management. store:default — auth token and hotkey persistence (main window only; overlay must not read/write the store). window-state:default — save/restore main window size and position. global-shortcut:default — register/unregister rebindable hotkeys (main window only; overlay has no need to touch shortcuts).",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-set-focus",
+    "core:window:allow-create",
+    "store:default",
+    "window-state:default",
+    "global-shortcut:default"
+  ]
+}

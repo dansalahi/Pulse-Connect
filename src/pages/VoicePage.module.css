@@ -1,0 +1,551 @@
+.root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #0a0a0a;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 12px;
+  border-bottom: 1px solid #1a1a1a;
+  flex-shrink: 0;
+}
+
+.roomName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.participantCount {
+  font-size: 12px;
+  color: #555555;
+}
+
+.noCall {
+  text-align: center;
+  margin-top: 80px;
+  color: #444;
+  font-size: 14px;
+}
+
+/* ── Shortcut legend ─────────────────────────────────────────────────────── */
+
+.shortcutBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  margin: 8px 16px 0;
+  flex-shrink: 0;
+}
+
+.shortcutItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.shortcutKey {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #888888;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.shortcutLabel {
+  font-size: 11px;
+  color: #666666;
+}
+
+.shortcutDot {
+  font-size: 11px;
+  color: #333333;
+  margin-left: 6px;
+}
+
+/* ── Participant grid ─────────────────────────────────────────────────────── */
+
+.grid {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px;
+  align-content: flex-start;
+  overflow-y: auto;
+}
+
+.card {
+  width: 160px;
+  height: 180px;
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 12px 12px;
+  transition: border-color 0.15s ease;
+  position: relative;
+}
+
+.cardSpeaking {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+}
+
+.cardAvatarWrap {
+  position: relative;
+}
+
+.cardAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.mutedBadge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 2px solid #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.youBadge {
+  color: #888888;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.inviteOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.inviteModal {
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 8px;
+  padding: 24px;
+  min-width: 280px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  animation: slideUp 0.15s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+
+.inviteModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.inviteModalTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+.inviteClose {
+  background: none;
+  border: none;
+  color: #666666;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.12s ease;
+}
+
+.inviteClose:hover { color: #ffffff; }
+
+.inviteList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.inviteEmpty {
+  font-size: 13px;
+  color: #555555;
+  text-align: center;
+  padding: 16px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.inviteRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background 0.12s ease;
+}
+
+.inviteRow:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.inviteAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.inviteName {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  color: #cccccc;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.inviteBtn {
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 107, 0, 0.4);
+  border-radius: 4px;
+  color: #FF6B00;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s ease;
+}
+
+.inviteBtn:hover {
+  background: rgba(255, 107, 0, 0.15);
+}
+
+.cardName {
+  font-size: 13px;
+  font-weight: 500;
+  color: #dddddd;
+  text-align: center;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+
+/* ── Bottom section ───────────────────────────────────────────────────────── */
+
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  background: #111111;
+  border-top: 1px solid #1a1a1a;
+  flex-shrink: 0;
+}
+
+/* ── Control bar ─────────────────────────────────────────────────────────── */
+
+.controlBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px 8px;
+}
+
+/* ── Pill group (mic / invite) ────────────────────────────────────────────── */
+
+.pillGroup {
+  display: flex;
+  align-items: stretch;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.pillGroup:hover { border-color: #444444; }
+
+/* Red tint when muted */
+.pillGroupMuted {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.pillMain {
+  height: 44px;
+  padding: 0 14px;
+  background: transparent;
+  border: none;
+  color: #cccccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.12s ease;
+}
+
+.pillMain:hover { color: #ffffff; }
+
+.pillGroupMuted .pillMain { color: #ef4444; }
+.pillGroupMuted .pillMain:hover { color: #ff6b6b; }
+
+.pillArrow {
+  height: 44px;
+  width: 28px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid #2a2a2a;
+  color: #555555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  font-size: 10px;
+}
+
+.pillGroupMuted .pillArrow { border-left-color: rgba(239, 68, 68, 0.25); }
+
+.chevron { font-size: 10px; line-height: 1; }
+
+/* ── Small individual icon buttons ───────────────────────────────────────── */
+
+.iconBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  background: #1a1a1a;
+  color: #888888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+  opacity: 0.5;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+/* Overlay toggle — always interactive */
+.overlayBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #333333;
+  background: #1a1a1a;
+  color: #888888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.overlayBtn:hover {
+  background: #2a2a2a;
+  color: #cccccc;
+}
+
+.overlayBtnActive {
+  background: rgba(255, 107, 0, 0.2);
+  border-color: #FF6B00;
+  color: #FF6B00;
+}
+
+.overlayBtnActive:hover {
+  background: rgba(255, 107, 0, 0.3);
+}
+
+.iconBtnActive {
+  background: rgba(255, 107, 0, 0.15);
+  border-color: rgba(255, 107, 0, 0.4);
+  color: #FF6B00;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.iconBtnActive:hover {
+  background: rgba(255, 107, 0, 0.25);
+}
+
+/* ── Leave button ─────────────────────────────────────────────────────────── */
+
+.leaveBtn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: none;
+  background: #ef4444;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  margin-left: 8px;
+}
+
+.leaveBtn:hover { background: #dc2626; }
+
+/* ── Mic dropdown menu ────────────────────────────────────────────────────── */
+
+.micMenu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 6px;
+  z-index: 200;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.micMenuSection {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #555555;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 8px 4px;
+  margin: 0;
+}
+
+.micMenuItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 7px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #bbbbbb;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+.micMenuItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.micMenuItemActive {
+  color: #FF6B00;
+}
+
+.micMenuItemActive::before {
+  content: "✓ ";
+}
+
+/* ── Debug panel ─────────────────────────────────────────────────────────── */
+
+.debugPanel {
+  position: absolute;
+  bottom: 80px;
+  right: 16px;
+  width: 220px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: #888888;
+  backdrop-filter: blur(8px);
+}
+
+.debugTitle {
+  font-weight: 700;
+  color: #FF6B00;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.debugRow {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+}
+
+.debugRow span:last-child {
+  color: #cccccc;
+}
+
+/* ── Device selector ──────────────────────────────────────────────────────── */
+

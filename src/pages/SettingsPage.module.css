@@ -1,0 +1,296 @@
+.root {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  background: #0d0d0d;
+  font-family: 'Inter', sans-serif;
+}
+
+.content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 32px;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 32px;
+}
+
+/* ── Section ─────────────────────────────────────────────────────────────── */
+
+.section {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.sectionDesc {
+  font-size: 13px;
+  color: #555555;
+  margin: 0 0 16px;
+}
+
+/* ── Blocked list ─────────────────────────────────────────────────────────── */
+
+.blockedList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.blockedRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.blockedRow:hover {
+  background: #161616;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.displayName {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #dddddd;
+}
+
+.unblockBtn {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: #888888;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.unblockBtn:hover {
+  border-color: #FF6B00;
+  color: #FF6B00;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px;
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 8px;
+}
+
+.emptyText {
+  font-size: 13px;
+  color: #444444;
+}
+
+.errorText {
+  font-size: 12px;
+  color: #ff4444;
+  margin-bottom: 12px;
+}
+
+/* ── Keyboard shortcuts ───────────────────────────────────────────────────── */
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sectionHeader .sectionTitle,
+.sectionHeader .sectionDesc {
+  margin-bottom: 0;
+}
+
+.resetAllBtn {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: #666666;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.resetAllBtn:hover {
+  border-color: #444444;
+  color: #aaaaaa;
+}
+
+.hotkeyTable {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hotkeyRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.hotkeyRowEditing {
+  border-color: #FF6B00;
+}
+
+.hotkeyLabel {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: #cccccc;
+}
+
+.hotkeyBinding {
+  min-width: 80px;
+  display: flex;
+  justify-content: center;
+}
+
+.kbd {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #dddddd;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.kbdRecorded {
+  border-color: #FF6B00;
+  color: #FF6B00;
+}
+
+.recordingHint {
+  font-size: 12px;
+  color: #FF6B00;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.hotkeyBtns {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.editBtn,
+.resetOneBtn,
+.saveBtn,
+.cancelBtn {
+  padding: 5px 12px;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: #888888;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.editBtn:hover {
+  border-color: #FF6B00;
+  color: #FF6B00;
+}
+
+.resetOneBtn {
+  padding: 5px 8px;
+  font-size: 14px;
+}
+
+.resetOneBtn:hover {
+  border-color: #444444;
+  color: #aaaaaa;
+}
+
+.saveBtn {
+  border-color: #FF6B00;
+  color: #FF6B00;
+}
+
+.saveBtn:hover:not(:disabled) {
+  background: #FF6B00;
+  color: #ffffff;
+}
+
+.saveBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.cancelBtn:hover {
+  border-color: #444444;
+  color: #aaaaaa;
+}
+
+/* ── Diagnostics ──────────────────────────────────────────────────────────── */
+
+.diagnosticsBtn {
+  padding: 8px 20px;
+  background: #FF6B00;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.diagnosticsBtn:hover {
+  background: #e05e00;
+}

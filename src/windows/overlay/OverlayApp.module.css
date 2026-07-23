@@ -1,0 +1,170 @@
+/* ── Transparency + click-through defaults ────────────────────────────────── */
+:global(html),
+:global(body),
+:global(#overlay-root) {
+  background: transparent !important;
+  background-color: transparent !important;
+  margin: 0;
+  padding: 0;
+  /* Click-through by default — only the pill should intercept events */
+  pointer-events: none;
+}
+
+/* ── Pill ─────────────────────────────────────────────────────────────────── */
+
+.pill {
+  pointer-events: auto !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  padding: 8px 16px;
+  height: 56px;
+  width: fit-content;
+  max-width: calc(100vw - 8px);
+  overflow: hidden;
+  user-select: none;
+  cursor: move;
+}
+
+.pillInteractive {
+  border-color: #FF6B00;
+}
+
+/* ── Room name ────────────────────────────────────────────────────────────── */
+
+.roomName {
+  font-family: -apple-system, 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 72px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+/* ── Divider ──────────────────────────────────────────────────────────────── */
+
+.divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+/* ── Avatar row ───────────────────────────────────────────────────────────── */
+
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  user-select: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.avatarSpeaking {
+  box-shadow: 0 0 0 2px #22c55e;
+}
+
+.mutedDot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 2px solid rgba(20, 20, 20, 0.8);
+}
+
+.overflow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  flex-shrink: 0;
+}
+
+/* ── Action buttons ───────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  pointer-events: auto !important;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ffffff;
+  flex-shrink: 0;
+  transition: background 0.12s ease;
+}
+
+.actionBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.actionBtnMuted {
+  background: #ef4444;
+}
+
+.actionBtnMuted:hover {
+  background: #dc2626;
+}
+
+.actionBtnLeave {
+  background: #ef4444;
+}
+
+.actionBtnLeave:hover {
+  background: #dc2626;
+}
+
+.actionBtnClose {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.actionBtnClose:hover {
+  background: rgba(255, 255, 255, 0.18);
+}

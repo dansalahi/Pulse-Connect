@@ -1,0 +1,859 @@
+.root {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── List panel (left, fixed 360px) ──────────────────────────────────────── */
+
+.listPanel {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0d0d0d;
+  border-right: 1px solid #1e1e1e;
+}
+
+.searchWrapper {
+  position: relative;
+  padding: 12px 12px 8px;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.searchInput::placeholder {
+  color: #444444;
+}
+
+.searchInput:focus {
+  border-color: #FF6B00;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.12);
+}
+
+.searchInput::-webkit-search-cancel-button {
+  display: none;
+}
+
+.clearBtn {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-30%);
+  background: none;
+  border: none;
+  color: #888888;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.clearBtn:hover {
+  color: #ffffff;
+}
+
+.listScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 8px 8px;
+}
+
+.listScroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.listScroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.listScroll::-webkit-scrollbar-thumb {
+  background: #1e1e1e;
+  border-radius: 2px;
+}
+
+/* ── Status group card ────────────────────────────────────────────────────── */
+
+.card {
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.card:last-child {
+  margin-bottom: 0;
+}
+
+.cardHeader {
+  padding: 8px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #555555;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1a1a1a;
+  background: #0f0f0f;
+  border-radius: 8px 8px 0 0;
+}
+
+/* ── Friend row (compact — avatar + name + status dot only) ───────────────── */
+
+.friendRow {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 12px;
+  gap: 10px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  border-bottom: 1px solid #161616;
+  transition: background 0.15s ease, border-left-color 0.15s ease;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.friendRow:last-child {
+  border-bottom: none;
+}
+
+.friendRow:hover {
+  background: #161616;
+}
+
+.friendRowSelected {
+  border-left-color: #FF6B00;
+  background: #1a1a1a;
+}
+
+.friendRowSelected:hover {
+  background: #1e1e1e;
+}
+
+/* ── Avatar ───────────────────────────────────────────────────────────────── */
+
+.avatarWrapper {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  user-select: none;
+}
+
+.statusDot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid #111111;
+}
+
+.friendRowSelected .statusDot {
+  border-color: #1a1a1a;
+}
+
+.displayName {
+  flex: 1;
+  min-width: 0;       /* allows flex child to shrink below content width */
+  font-size: 13px;
+  font-weight: 500;
+  color: #dddddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.friendRowSelected .displayName,
+.vRowSelected .displayName {
+  color: #ffffff;
+}
+
+/* ── List empty / error states ────────────────────────────────────────────── */
+
+.listEmpty,
+.listError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 28px;
+  filter: grayscale(1);
+  opacity: 0.35;
+}
+
+.emptyText {
+  font-size: 13px;
+  color: #444444;
+}
+
+.errorText {
+  font-size: 12px;
+  color: #ff4444;
+}
+
+.retryBtn {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #FF6B00;
+  border-radius: 6px;
+  color: #FF6B00;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.retryBtn:hover {
+  background: rgba(255, 107, 0, 0.1);
+}
+
+/* ── Detail panel (right, flex-1) ─────────────────────────────────────────── */
+
+.detailPanel {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  background: #0d0d0d;
+  display: flex;
+  align-items: flex-start;
+  overflow-y: auto;
+  position: relative; /* needed for back button absolute positioning */
+}
+
+/* ── Placeholder (no friend selected) ────────────────────────────────────── */
+
+.detailPlaceholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  align-self: center;
+  width: 100%;
+  padding: 40px;
+}
+
+.detailPlaceholderText {
+  font-size: 14px;
+  color: #3a3a3a;
+}
+
+/* ── Friend detail ────────────────────────────────────────────────────────── */
+
+.detailContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 32px 32px;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  animation: detailFadeIn 0.18s ease;
+}
+
+@keyframes detailFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.detailAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.detailName {
+  margin: 16px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+}
+
+.detailStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.detailStatusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.detailStatusText {
+  font-size: 13px;
+  color: #888888;
+}
+
+.detailGame {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 400;
+  color: #888888;
+  text-transform: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.detailDivider {
+  width: 100%;
+  height: 1px;
+  background: #1e1e1e;
+  margin: 28px 0 24px;
+}
+
+.detailActions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voiceCallBtn {
+  width: 100%;
+  padding: 11px 16px;
+  background: #FF6B00;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.voiceCallBtn:hover:not(:disabled) {
+  background: #e05e00;
+}
+
+.callingRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 6px;
+}
+
+.callingLabel {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #22c55e;
+}
+
+.cancelCallBtn {
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 5px;
+  color: #888;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+.cancelCallBtn:hover { color: #fff; border-color: #555; }
+
+.voiceCallBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.removeActionBtn {
+  width: 100%;
+  padding: 11px 16px;
+  background: rgba(127, 29, 29, 0.25);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 6px;
+  color: #ef4444;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.removeActionBtn:hover {
+  background: rgba(127, 29, 29, 0.4);
+}
+
+.blockActionBtn {
+  width: 100%;
+  padding: 11px 16px;
+  background: #161616;
+  border: 1px solid #252525;
+  border-radius: 6px;
+  color: #888888;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.blockActionBtn:hover {
+  background: #1e1e1e;
+  color: #cccccc;
+}
+
+.detailNote {
+  margin-top: 20px;
+  font-size: 11px;
+  color: #333333;
+}
+
+/* ── Skeleton ─────────────────────────────────────────────────────────────── */
+
+.skeletonCardHeader {
+  height: 32px;
+  background: #0f0f0f;
+  border-bottom: 1px solid #1a1a1a;
+  border-radius: 8px 8px 0 0;
+  animation: skeletonPulse 1.5s ease infinite;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  padding: 0 12px;
+  gap: 12px;
+  border-bottom: 1px solid #111111;
+}
+
+.skeletonLines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skeletonAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  flex-shrink: 0;
+  animation: skeletonPulse 1.5s ease infinite;
+}
+
+.skeletonLine {
+  height: 11px;
+  border-radius: 4px;
+  background: #1a1a1a;
+  animation: skeletonPulse 1.5s ease infinite;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.7; }
+}
+
+/* ── Status filter badge row ─────────────────────────────────────────────── */
+
+.filterBadgesRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 12px 8px;
+  border-bottom: 1px solid #1a1a1a;
+  flex-shrink: 0;
+}
+
+.filterBadge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid #222222;
+  background: transparent;
+  color: #666666;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  white-space: nowrap;
+}
+
+.filterBadge:hover {
+  border-color: #333;
+  color: #999;
+}
+
+.filterBadgeActive {
+  border-color: #FF6B00;
+  color: #FF6B00;
+  background: rgba(255, 107, 0, 0.08);
+}
+
+.filterBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── TanStack Table layout ────────────────────────────────────────────────── */
+
+.tableWrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: none;
+}
+
+.headerRow {
+  display: flex;
+  height: 32px;
+  align-items: center;
+}
+
+.headerCell {
+  font-size: 10px;
+  font-weight: 600;
+  color: #555555;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+}
+
+.tableBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tableBody::-webkit-scrollbar { width: 4px; }
+.tableBody::-webkit-scrollbar-track { background: transparent; }
+.tableBody::-webkit-scrollbar-thumb { background: #1e1e1e; border-radius: 2px; }
+
+/* ── Table row (52px fixed — matches ROW_H) ──────────────────────────────── */
+
+.tableRow {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  cursor: pointer;
+  border-bottom: 1px solid #111111;
+  transition: background 0.12s ease;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.tableRow:hover { background: #161616; }
+.tableRow:hover .rowActions { opacity: 1; transform: translateX(0); }
+
+.tableRowSelected {
+  background: #1a1a1a;
+  box-shadow: inset 3px 0 0 #FF6B00;
+}
+
+.tableRowSelected:hover { background: #1e1e1e; }
+
+/* ── Cell content components ─────────────────────────────────────────────── */
+
+.nameCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 0 8px;
+}
+
+.gameName {
+  font-size: 11px;
+  font-weight: 400;
+  color: #888888;
+  text-transform: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.statusPill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rowActions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  flex-shrink: 0;
+  padding-right: 8px;
+}
+
+/* ── Virtualised list header (36px — matches HEADER_H constant) ──────────── */
+
+.vHeader {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #555555;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  background: #0f0f0f;
+  border: 1px solid #1e1e1e;
+  border-radius: 8px 8px 0 0;
+  box-sizing: border-box;
+}
+
+/* ── Virtualised friend row (52px — matches ROW_H constant) ──────────────── */
+
+.vRow {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+  cursor: pointer;
+  background: #111111;
+  border-left: 1px solid #1e1e1e;
+  border-right: 1px solid #1e1e1e;
+  border-top: none;
+  border-bottom: 1px solid #161616;
+  transition: background 0.15s ease;
+  box-sizing: border-box;
+  outline: none;
+  overflow: hidden;
+}
+
+.vRow:hover {
+  background: #161616;
+}
+
+.vRowSelected {
+  background: #1a1a1a;
+  box-shadow: inset 3px 0 0 #FF6B00;
+}
+
+.vRowSelected:hover {
+  background: #1e1e1e;
+}
+
+.vRowLast {
+  border-bottom: 1px solid #1e1e1e;
+  border-radius: 0 0 8px 8px;
+}
+
+/* ── Row hover action buttons ─────────────────────────────────────────────── */
+
+.rowActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.vRow:hover .rowActions {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.rowBtnRemove,
+.rowBtnAdd,
+.rowBtnBlock {
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  white-space: nowrap;
+}
+
+.rowBtnRemove {
+  background: transparent;
+  border-color: #333;
+  color: #888;
+}
+.rowBtnRemove:hover { background: #222; color: #fff; }
+
+.rowBtnAdd {
+  background: transparent;
+  border-color: rgba(255, 107, 0, 0.5);
+  color: #FF6B00;
+}
+.rowBtnAdd:hover { background: rgba(255, 107, 0, 0.12); }
+
+.rowBtnBlock {
+  background: transparent;
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #ef4444;
+}
+.rowBtnBlock:hover { background: rgba(239, 68, 68, 0.12); }
+
+/* Detail panel add-friend button */
+.addActionBtn {
+  width: 100%;
+  padding: 11px 16px;
+  background: rgba(255, 107, 0, 0.15);
+  border: 1px solid rgba(255, 107, 0, 0.35);
+  border-radius: 6px;
+  color: #FF6B00;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.addActionBtn:hover { background: rgba(255, 107, 0, 0.25); }
+
+/* ── Back button (hidden on large screen, shown on mobile) ────────────────── */
+
+.backBtn {
+  display: none; /* large screen: back button never needed */
+}
+
+/* ── Responsive: ≤768px ───────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Root becomes a slide container */
+  .root {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Both panels fill the full viewport, stacked behind each other */
+  .listPanel {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border-right: none;
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+    z-index: 1;
+  }
+
+  /* Applied when a friend is selected → slide list out to the left */
+  .listSlideOut {
+    transform: translateX(-100%);
+  }
+
+  .detailPanel {
+    position: absolute;
+    inset: 0;
+    transform: translateX(100%); /* start hidden to the right */
+    transition: transform 0.3s ease;
+    z-index: 2;
+  }
+
+  /* Applied when showDetail = true → slide detail panel in from the right */
+  .detailSlideIn {
+    transform: translateX(0);
+  }
+
+  /* Back button: only visible on mobile */
+  .backBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 10;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: #888888;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .backBtn:hover {
+    color: #ffffff;
+  }
+
+  /* Push detail content below the back button on mobile */
+  .detailContent {
+    padding-top: 72px;
+  }
+}

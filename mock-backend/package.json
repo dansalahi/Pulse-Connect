@@ -1,0 +1,17 @@
+{
+  "name": "mock-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "livekit-server-sdk": "^2.15.3",
+    "ws": "^8.20.1"
+  }
+}

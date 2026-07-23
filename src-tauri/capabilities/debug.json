@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "debug",
+  "description": "Debug tools window — read-only access to runtime state via IPC. Only active when the app is launched with --debug. core:default allows invoking read-only commands (get_voice_state, get_ws_connected, get_hotkey_bindings). No auth, store, shortcut, or window-state access.",
+  "windows": ["debug"],
+  "permissions": [
+    "core:default"
+  ]
+}

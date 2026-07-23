@@ -1,0 +1,13 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "overlay",
+  "description": "Overlay window scoped permissions — no auth, store, shortcut, or window-state access. core:default — basic Tauri runtime IPC so the overlay can invoke custom commands (overlay_toggle_mute, overlay_leave_call, overlay_close, show_overlay, hide_overlay). allow-start-dragging — pill drag support. allow-set-ignore-cursor-events — click-through toggle (Ctrl+Shift). allow-outer-position and allow-set-position — edge-snap on drag-release.",
+  "windows": ["overlay"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-start-dragging",
+    "core:window:allow-set-ignore-cursor-events",
+    "core:window:allow-outer-position",
+    "core:window:allow-set-position"
+  ]
+}

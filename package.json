@@ -1,0 +1,60 @@
+{
+  "name": "pulse-connect",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Pulse Connect — real-time voice, presence, and team communication desktop app built with Tauri 2, React 19, and Rust",
+  "author": {
+    "name": "Daniel Salahi",
+    "email": "dan.salahii@gmail.com",
+    "url": "https://meetdaniel.live"
+  },
+  "homepage": "https://meetdaniel.live",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dansalahi/Pulse-Connect.git"
+  },
+  "type": "module",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "lint": "eslint src --max-warnings=0",
+    "test": "vitest run",
+    "ci": "pnpm tsc --noEmit && pnpm lint && pnpm test",
+    "dev:all": "./dev.sh"
+  },
+  "dependencies": {
+    "@livekit/components-react": "^2.9.21",
+    "@livekit/components-styles": "^1.2.0",
+    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.24",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "immer": "^11.1.8",
+    "livekit-client": "^2.19.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zustand": "^5.0.13"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "^10.4.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^29.1.1",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.59.3",
+    "vite": "^7.0.4",
+    "vitest": "^4.1.6"
+  }
+}

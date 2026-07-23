@@ -1,0 +1,54 @@
+[package]
+name = "pulse-connect"
+version = "0.1.0"
+description = "Pulse Connect — real-time voice, presence, and team communication desktop app"
+authors = ["Daniel Salahi <dan.salahii@gmail.com>"]
+homepage = "https://meetdaniel.live"
+repository = "https://github.com/dansalahi/Pulse-Connect"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "pulse_connect_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["macos-private-api"] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri-plugin-store = "2.4.3"
+tauri-plugin-single-instance = "2.4.2"
+tauri-plugin-global-shortcut = "2.3.1"
+tauri-plugin-window-state = "2.4.1"
+tokio = { version = "1.52.3", features = ["full"] }
+thiserror = "2.0.18"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+tracing-appender = "0.2.5"
+reqwest = { version = "0.13.3", features = ["json", "rustls"] }
+secrecy = "0.10.3"
+specta = { version = "1.0.5", features = ["functions"] }
+rand = "0.8"
+keyring = "2.3.3"
+tokio-tungstenite = "0.26"
+futures-util = "0.3"
+sysinfo = "0.30"
+chrono = { version = "0.4", features = ["serde"] }
+regex = "1"
+zip = "2"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.5"
+
+[dev-dependencies]
+tauri = { version = "2", features = ["test"] }
+tokio = { version = "1", features = ["rt", "macros"] }
+
