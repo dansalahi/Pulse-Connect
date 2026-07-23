@@ -14,11 +14,6 @@
     "url": "git+https://github.com/dansalahi/Pulse-Connect.git"
   },
   "type": "module",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
-  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
