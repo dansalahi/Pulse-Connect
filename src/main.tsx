@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { invoke } from "@tauri-apps/api/core";
 import App from "./App";
-import "./reset.css";
+import "./ui/tokens.css";
+import "./ui/base.css";
 
 // Global error handlers — breadcrumb telemetry only, no network calls.
 // Failures are swallowed (.catch) so these never affect the app.

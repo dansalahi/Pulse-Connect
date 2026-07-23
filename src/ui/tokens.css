@@ -1,0 +1,25 @@
+:root {
+  /* Surfaces */
+  --bg-app: #0B0B10;
+  --bg-raised: #14141B;
+  --bg-overlay: #1C1C26;
+  --border: #2A2A38;
+
+  /* Accent */
+  --accent: #8B5CF6;
+  --accent-hover: #A78BFA;
+  --accent-active: #7C3AED;
+  --accent-muted: rgba(139, 92, 246, .15);
+
+  /* Text */
+  --text-primary: #F4F4F8;
+  --text-secondary: #A0A0B0;
+  --text-disabled: #5C5C6E;
+
+  /* Status */
+  --status-online: #34D399;
+  --status-ingame: #8B5CF6;
+  --status-dnd: #F87171;
+  --status-offline: #5C5C6E;
+  --danger: #EF4444;
+}
