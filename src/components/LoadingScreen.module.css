@@ -4,7 +4,7 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background: #0a0a0a;
+  background: var(--bg-app);
 }
 
 .content {
@@ -19,7 +19,7 @@
   font-size: 36px;
   font-weight: 800;
   letter-spacing: 0.3em;
-  background: linear-gradient(135deg, #FF6B00, #ff9a00);
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -34,7 +34,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #FF6B00;
+  background: var(--accent);
   animation: pulse 1.4s ease-in-out infinite;
 }
 

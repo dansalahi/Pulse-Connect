@@ -3,9 +3,9 @@
   flex-direction: row;
   width: 100vw;
   height: 100vh;
-  background: #0a0a0a;
+  background: var(--bg-app);
   font-family: 'Inter', sans-serif;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */
@@ -14,8 +14,8 @@
   width: 64px;
   flex-shrink: 0;
   height: 100%;
-  background: #0d0d0d;
-  border-right: 1px solid #1a1a1a;
+  background: var(--bg-app);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,13 +30,13 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #FF6B00;
+  background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-primary);
   letter-spacing: -0.5px;
   margin-bottom: 24px;
   flex-shrink: 0;
@@ -77,11 +77,11 @@
 }
 
 .navBtnActive {
-  background: rgba(255, 107, 0, 0.15);
+  background: var(--accent-muted);
 }
 
 .navBtnActive:hover {
-  background: rgba(255, 107, 0, 0.2);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 /* ── Tooltip ──────────────────────────────────────────────────────────────── */
@@ -91,8 +91,8 @@
   left: calc(100% + 10px);
   top: 50%;
   transform: translateY(-50%);
-  background: #1a1a1a;
-  color: #ffffff;
+  background: var(--bg-raised);
+  color: var(--text-primary);
   border-radius: 4px;
   padding: 6px 10px;
   font-family: 'Inter', sans-serif;
@@ -127,16 +127,16 @@
   align-items: center;
   gap: 6px;
   padding: 10px 8px;
-  background: rgba(34, 197, 94, 0.08);
-  border-top: 1px solid rgba(34, 197, 94, 0.2);
-  border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+  background: color-mix(in srgb, var(--status-online) 8%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--status-online) 20%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--status-online) 20%, transparent);
   flex-shrink: 0;
 }
 
 .callBarRoom {
   font-size: 9px;
   font-weight: 600;
-  color: #22c55e;
+  color: var(--status-online);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-align: center;
@@ -150,9 +150,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid #2a2a2a;
-  background: #1a1a1a;
-  color: #cccccc;
+  border: 1px solid var(--border);
+  background: var(--bg-raised);
+  color: var(--text-secondary);
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -161,18 +161,18 @@
   transition: background 0.12s ease;
 }
 
-.callBarBtn:hover { background: #222; color: #fff; }
+.callBarBtn:hover { background: var(--bg-overlay); color: var(--text-primary); }
 
 .callBarBtnActive {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #ef4444;
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+  color: var(--danger);
 }
 
 .callBarBtnLeave {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: #ef4444;
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 35%, transparent);
+  color: var(--danger);
 }
 
 .wsDot {
@@ -184,18 +184,18 @@
 }
 
 .wsDotOnline {
-  background: #22c55e;
+  background: var(--status-online);
   animation: wsPulse 2s ease infinite;
 }
 
 .wsDotOffline {
-  background: #555555;
+  background: var(--status-offline);
 }
 
 @keyframes wsPulse {
-  0%   { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0.4); }
-  70%  { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-  100% { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0); }
+  0%   { box-shadow: 0 0 0 0   color-mix(in srgb, var(--status-online) 40%, transparent); }
+  70%  { box-shadow: 0 0 0 6px color-mix(in srgb, var(--status-online) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0   color-mix(in srgb, var(--status-online) 0%, transparent); }
 }
 
 /* Full sidebar width so the popup's left: 0 aligns with the sidebar edge. */
@@ -229,13 +229,13 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #FF6B00;
+  background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   user-select: none;
   flex-shrink: 0;
 }
@@ -246,8 +246,8 @@
   /* left and bottom are set via inline style from getBoundingClientRect() */
   position: fixed;
   width: 200px;
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 4px;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
@@ -269,7 +269,7 @@
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -283,16 +283,16 @@
 }
 
 .menuItemDanger {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .menuItemDanger:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
 }
 
 .menuDivider {
   height: 1px;
-  background: #2a2a2a;
+  background: var(--border);
   margin: 4px 0;
 }
 
@@ -305,7 +305,7 @@
 .statusSectionLabel {
   font-size: 10px;
   font-weight: 600;
-  color: #555555;
+  color: var(--text-disabled);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin: 0 8px 6px;
@@ -326,7 +326,7 @@
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #cccccc;
+  color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -337,7 +337,7 @@
 
 .statusOption:hover { background: rgba(255, 255, 255, 0.06); }
 
-.statusOptionActive { color: #ffffff; }
+.statusOptionActive { color: var(--text-primary); }
 
 .statusOptionDot {
   width: 8px;
@@ -349,7 +349,7 @@
 .statusOptionCheck {
   margin-left: auto;
   font-size: 11px;
-  color: #FF6B00;
+  color: var(--accent);
 }
 
 .inGameInput {
@@ -362,17 +362,17 @@
 .gameInput {
   width: 100%;
   padding: 7px 10px;
-  background: #0a0a0a;
-  border: 1px solid #2a2a2a;
+  background: var(--bg-app);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   outline: none;
   box-sizing: border-box;
 }
 
-.gameInput:focus { border-color: #3b82f6; }
+.gameInput:focus { border-color: var(--status-ingame); }
 
 .inGameBtns {
   display: flex;
@@ -394,17 +394,17 @@
 
 .inGameCancel {
   background: transparent;
-  border-color: #333;
-  color: #888;
+  border-color: var(--border);
+  color: var(--text-secondary);
 }
-.inGameCancel:hover { background: #1e1e1e; color: #fff; }
+.inGameCancel:hover { background: var(--bg-overlay); color: var(--text-primary); }
 
 .inGameConfirm {
-  background: rgba(59, 130, 246, 0.2);
-  border-color: rgba(59, 130, 246, 0.5);
-  color: #3b82f6;
+  background: color-mix(in srgb, var(--status-ingame) 20%, transparent);
+  border-color: color-mix(in srgb, var(--status-ingame) 50%, transparent);
+  color: var(--status-ingame);
 }
-.inGameConfirm:hover { background: rgba(59, 130, 246, 0.3); }
+.inGameConfirm:hover { background: color-mix(in srgb, var(--status-ingame) 30%, transparent); }
 
 /* ── Content area ─────────────────────────────────────────────────────────── */
 
@@ -422,5 +422,5 @@
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  color: #444444;
+  color: var(--text-disabled);
 }

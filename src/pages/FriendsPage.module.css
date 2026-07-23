@@ -13,8 +13,8 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background: #0d0d0d;
-  border-right: 1px solid #1e1e1e;
+  background: var(--bg-app);
+  border-right: 1px solid var(--border);
 }
 
 .searchWrapper {
@@ -26,10 +26,10 @@
 .searchInput {
   width: 100%;
   padding: 8px 32px 8px 12px;
-  background: #111111;
-  border: 1px solid #1e1e1e;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   outline: none;
@@ -38,12 +38,12 @@
 }
 
 .searchInput::placeholder {
-  color: #444444;
+  color: var(--text-disabled);
 }
 
 .searchInput:focus {
-  border-color: #FF6B00;
-  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .searchInput::-webkit-search-cancel-button {
@@ -57,7 +57,7 @@
   transform: translateY(-30%);
   background: none;
   border: none;
-  color: #888888;
+  color: var(--text-secondary);
   font-size: 16px;
   cursor: pointer;
   padding: 0 2px;
@@ -66,7 +66,7 @@
 }
 
 .clearBtn:hover {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .listScroll {
@@ -86,15 +86,15 @@
 }
 
 .listScroll::-webkit-scrollbar-thumb {
-  background: #1e1e1e;
+  background: var(--border);
   border-radius: 2px;
 }
 
 /* ── Status group card ────────────────────────────────────────────────────── */
 
 .card {
-  background: #111111;
-  border: 1px solid #1e1e1e;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
   border-radius: 8px;
   margin-bottom: 8px;
   overflow: hidden;
@@ -108,11 +108,11 @@
   padding: 8px 12px;
   font-size: 10px;
   font-weight: 600;
-  color: #555555;
+  color: var(--text-disabled);
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  border-bottom: 1px solid #1a1a1a;
-  background: #0f0f0f;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-app);
   border-radius: 8px 8px 0 0;
 }
 
@@ -126,7 +126,7 @@
   gap: 10px;
   cursor: pointer;
   border-left: 2px solid transparent;
-  border-bottom: 1px solid #161616;
+  border-bottom: 1px solid var(--border);
   transition: background 0.15s ease, border-left-color 0.15s ease;
   box-sizing: border-box;
   outline: none;
@@ -137,16 +137,16 @@
 }
 
 .friendRow:hover {
-  background: #161616;
+  background: var(--bg-overlay);
 }
 
 .friendRowSelected {
-  border-left-color: #FF6B00;
-  background: #1a1a1a;
+  border-left-color: var(--accent);
+  background: var(--border);
 }
 
 .friendRowSelected:hover {
-  background: #1e1e1e;
+  background: color-mix(in srgb, var(--border) 100%, white 12%);
 }
 
 /* ── Avatar ───────────────────────────────────────────────────────────────── */
@@ -167,7 +167,7 @@
   justify-content: center;
   font-size: 11px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   user-select: none;
 }
 
@@ -178,11 +178,11 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  border: 2px solid #111111;
+  border: 2px solid var(--bg-raised);
 }
 
 .friendRowSelected .statusDot {
-  border-color: #1a1a1a;
+  border-color: var(--border);
 }
 
 .displayName {
@@ -190,7 +190,7 @@
   min-width: 0;       /* allows flex child to shrink below content width */
   font-size: 13px;
   font-weight: 500;
-  color: #dddddd;
+  color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -198,7 +198,7 @@
 
 .friendRowSelected .displayName,
 .vRowSelected .displayName {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 /* ── List empty / error states ────────────────────────────────────────────── */
@@ -222,20 +222,20 @@
 
 .emptyText {
   font-size: 13px;
-  color: #444444;
+  color: var(--text-disabled);
 }
 
 .errorText {
   font-size: 12px;
-  color: #ff4444;
+  color: var(--danger);
 }
 
 .retryBtn {
   padding: 6px 14px;
   background: transparent;
-  border: 1px solid #FF6B00;
+  border: 1px solid var(--accent);
   border-radius: 6px;
-  color: #FF6B00;
+  color: var(--accent);
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   cursor: pointer;
@@ -243,7 +243,7 @@
 }
 
 .retryBtn:hover {
-  background: rgba(255, 107, 0, 0.1);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 /* ── Detail panel (right, flex-1) ─────────────────────────────────────────── */
@@ -252,7 +252,7 @@
   flex: 1;
   min-width: 0;
   min-height: 0;
-  background: #0d0d0d;
+  background: var(--bg-app);
   display: flex;
   align-items: flex-start;
   overflow-y: auto;
@@ -275,7 +275,7 @@
 
 .detailPlaceholderText {
   font-size: 14px;
-  color: #3a3a3a;
+  color: var(--text-disabled);
 }
 
 /* ── Friend detail ────────────────────────────────────────────────────────── */
@@ -305,7 +305,7 @@
   justify-content: center;
   font-size: 22px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   user-select: none;
   flex-shrink: 0;
 }
@@ -314,7 +314,7 @@
   margin: 16px 0 0;
   font-size: 20px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -334,14 +334,14 @@
 
 .detailStatusText {
   font-size: 13px;
-  color: #888888;
+  color: var(--text-secondary);
 }
 
 .detailGame {
   margin-top: 4px;
   font-size: 11px;
   font-weight: 400;
-  color: #888888;
+  color: var(--text-secondary);
   text-transform: none;
   white-space: nowrap;
   overflow: hidden;
@@ -352,7 +352,7 @@
 .detailDivider {
   width: 100%;
   height: 1px;
-  background: #1e1e1e;
+  background: var(--border);
   margin: 28px 0 24px;
 }
 
@@ -366,10 +366,10 @@
 .voiceCallBtn {
   width: 100%;
   padding: 11px 16px;
-  background: #FF6B00;
+  background: var(--accent);
   border: none;
   border-radius: 6px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -378,7 +378,7 @@
 }
 
 .voiceCallBtn:hover:not(:disabled) {
-  background: #e05e00;
+  background: var(--accent-active);
 }
 
 .callingRow {
@@ -387,8 +387,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 11px 16px;
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: color-mix(in srgb, var(--status-online) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--status-online) 30%, transparent);
   border-radius: 6px;
 }
 
@@ -396,21 +396,21 @@
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
-  color: #22c55e;
+  color: var(--status-online);
 }
 
 .cancelCallBtn {
   padding: 4px 12px;
   background: transparent;
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 5px;
-  color: #888;
+  color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   cursor: pointer;
   transition: color 0.12s ease, border-color 0.12s ease;
 }
-.cancelCallBtn:hover { color: #fff; border-color: #555; }
+.cancelCallBtn:hover { color: var(--text-primary); border-color: var(--text-disabled); }
 
 .voiceCallBtn:disabled {
   opacity: 0.45;
@@ -420,10 +420,10 @@
 .removeActionBtn {
   width: 100%;
   padding: 11px 16px;
-  background: rgba(127, 29, 29, 0.25);
-  border: 1px solid rgba(220, 38, 38, 0.25);
+  background: color-mix(in srgb, var(--danger) 18%, black);
+  border: 1px solid color-mix(in srgb, var(--danger) 25%, transparent);
   border-radius: 6px;
-  color: #ef4444;
+  color: var(--danger);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -432,16 +432,16 @@
 }
 
 .removeActionBtn:hover {
-  background: rgba(127, 29, 29, 0.4);
+  background: color-mix(in srgb, var(--danger) 30%, black);
 }
 
 .blockActionBtn {
   width: 100%;
   padding: 11px 16px;
-  background: #161616;
-  border: 1px solid #252525;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #888888;
+  color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -450,22 +450,22 @@
 }
 
 .blockActionBtn:hover {
-  background: #1e1e1e;
-  color: #cccccc;
+  background: color-mix(in srgb, var(--border) 100%, white 12%);
+  color: var(--text-secondary);
 }
 
 .detailNote {
   margin-top: 20px;
   font-size: 11px;
-  color: #333333;
+  color: var(--text-disabled);
 }
 
 /* ── Skeleton ─────────────────────────────────────────────────────────────── */
 
 .skeletonCardHeader {
   height: 32px;
-  background: #0f0f0f;
-  border-bottom: 1px solid #1a1a1a;
+  background: var(--bg-app);
+  border-bottom: 1px solid var(--border);
   border-radius: 8px 8px 0 0;
   animation: skeletonPulse 1.5s ease infinite;
 }
@@ -476,7 +476,7 @@
   height: 52px;
   padding: 0 12px;
   gap: 12px;
-  border-bottom: 1px solid #111111;
+  border-bottom: 1px solid var(--bg-raised);
 }
 
 .skeletonLines {
@@ -490,7 +490,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: var(--border);
   flex-shrink: 0;
   animation: skeletonPulse 1.5s ease infinite;
 }
@@ -498,7 +498,7 @@
 .skeletonLine {
   height: 11px;
   border-radius: 4px;
-  background: #1a1a1a;
+  background: var(--border);
   animation: skeletonPulse 1.5s ease infinite;
 }
 
@@ -514,7 +514,7 @@
   flex-wrap: wrap;
   gap: 4px;
   padding: 6px 12px 8px;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
@@ -524,9 +524,9 @@
   gap: 5px;
   padding: 3px 8px;
   border-radius: 20px;
-  border: 1px solid #222222;
+  border: 1px solid var(--border);
   background: transparent;
-  color: #666666;
+  color: var(--text-disabled);
   font-family: 'Inter', sans-serif;
   font-size: 10px;
   font-weight: 600;
@@ -537,14 +537,14 @@
 }
 
 .filterBadge:hover {
-  border-color: #333;
-  color: #999;
+  border-color: var(--text-disabled);
+  color: var(--text-secondary);
 }
 
 .filterBadgeActive {
-  border-color: #FF6B00;
-  color: #FF6B00;
-  background: rgba(255, 107, 0, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
 .filterBadgeDot {
@@ -577,7 +577,7 @@
 .headerCell {
   font-size: 10px;
   font-weight: 600;
-  color: #555555;
+  color: var(--text-disabled);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0 8px;
@@ -595,7 +595,7 @@
 
 .tableBody::-webkit-scrollbar { width: 4px; }
 .tableBody::-webkit-scrollbar-track { background: transparent; }
-.tableBody::-webkit-scrollbar-thumb { background: #1e1e1e; border-radius: 2px; }
+.tableBody::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
 /* ── Table row (52px fixed — matches ROW_H) ──────────────────────────────── */
 
@@ -604,21 +604,21 @@
   align-items: center;
   height: 52px;
   cursor: pointer;
-  border-bottom: 1px solid #111111;
+  border-bottom: 1px solid var(--bg-raised);
   transition: background 0.12s ease;
   box-sizing: border-box;
   outline: none;
 }
 
-.tableRow:hover { background: #161616; }
+.tableRow:hover { background: var(--bg-overlay); }
 .tableRow:hover .rowActions { opacity: 1; transform: translateX(0); }
 
 .tableRowSelected {
-  background: #1a1a1a;
-  box-shadow: inset 3px 0 0 #FF6B00;
+  background: var(--border);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
-.tableRowSelected:hover { background: #1e1e1e; }
+.tableRowSelected:hover { background: color-mix(in srgb, var(--border) 100%, white 12%); }
 
 /* ── Cell content components ─────────────────────────────────────────────── */
 
@@ -633,7 +633,7 @@
 .gameName {
   font-size: 11px;
   font-weight: 400;
-  color: #888888;
+  color: var(--text-secondary);
   text-transform: none;
   white-space: nowrap;
   overflow: hidden;
@@ -669,11 +669,11 @@
   padding: 0 12px;
   font-size: 10px;
   font-weight: 600;
-  color: #555555;
+  color: var(--text-disabled);
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  background: #0f0f0f;
-  border: 1px solid #1e1e1e;
+  background: var(--bg-app);
+  border: 1px solid var(--border);
   border-radius: 8px 8px 0 0;
   box-sizing: border-box;
 }
@@ -687,11 +687,11 @@
   padding: 0 12px;
   gap: 10px;
   cursor: pointer;
-  background: #111111;
-  border-left: 1px solid #1e1e1e;
-  border-right: 1px solid #1e1e1e;
+  background: var(--bg-raised);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
   border-top: none;
-  border-bottom: 1px solid #161616;
+  border-bottom: 1px solid var(--border);
   transition: background 0.15s ease;
   box-sizing: border-box;
   outline: none;
@@ -699,20 +699,20 @@
 }
 
 .vRow:hover {
-  background: #161616;
+  background: var(--bg-overlay);
 }
 
 .vRowSelected {
-  background: #1a1a1a;
-  box-shadow: inset 3px 0 0 #FF6B00;
+  background: var(--border);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .vRowSelected:hover {
-  background: #1e1e1e;
+  background: color-mix(in srgb, var(--border) 100%, white 12%);
 }
 
 .vRowLast {
-  border-bottom: 1px solid #1e1e1e;
+  border-bottom: 1px solid var(--border);
   border-radius: 0 0 8px 8px;
 }
 
@@ -748,40 +748,40 @@
 
 .rowBtnRemove {
   background: transparent;
-  border-color: #333;
-  color: #888;
+  border-color: var(--border);
+  color: var(--text-secondary);
 }
-.rowBtnRemove:hover { background: #222; color: #fff; }
+.rowBtnRemove:hover { background: var(--bg-overlay); color: var(--text-primary); }
 
 .rowBtnAdd {
   background: transparent;
-  border-color: rgba(255, 107, 0, 0.5);
-  color: #FF6B00;
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  color: var(--accent);
 }
-.rowBtnAdd:hover { background: rgba(255, 107, 0, 0.12); }
+.rowBtnAdd:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
 
 .rowBtnBlock {
   background: transparent;
-  border-color: rgba(239, 68, 68, 0.35);
-  color: #ef4444;
+  border-color: color-mix(in srgb, var(--danger) 35%, transparent);
+  color: var(--danger);
 }
-.rowBtnBlock:hover { background: rgba(239, 68, 68, 0.12); }
+.rowBtnBlock:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); }
 
 /* Detail panel add-friend button */
 .addActionBtn {
   width: 100%;
   padding: 11px 16px;
-  background: rgba(255, 107, 0, 0.15);
-  border: 1px solid rgba(255, 107, 0, 0.35);
+  background: var(--accent-muted);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
   border-radius: 6px;
-  color: #FF6B00;
+  color: var(--accent);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s ease;
 }
-.addActionBtn:hover { background: rgba(255, 107, 0, 0.25); }
+.addActionBtn:hover { background: color-mix(in srgb, var(--accent) 25%, transparent); }
 
 /* ── Back button (hidden on large screen, shown on mobile) ────────────────── */
 
@@ -836,11 +836,11 @@
     top: 16px;
     left: 16px;
     z-index: 10;
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
+    background: var(--bg-overlay);
+    border: 1px solid var(--border);
     border-radius: 6px;
     padding: 6px 12px;
-    color: #888888;
+    color: var(--text-secondary);
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 500;
@@ -849,7 +849,7 @@
   }
 
   .backBtn:hover {
-    color: #ffffff;
+    color: var(--text-primary);
   }
 
   /* Push detail content below the back button on mobile */

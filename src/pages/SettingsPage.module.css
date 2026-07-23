@@ -2,7 +2,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  background: #0d0d0d;
+  background: var(--bg-app);
   font-family: 'Inter', sans-serif;
 }
 
@@ -15,7 +15,7 @@
 .pageTitle {
   font-size: 22px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0 0 32px;
 }
 
@@ -28,13 +28,13 @@
 .sectionTitle {
   font-size: 14px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0 0 4px;
 }
 
 .sectionDesc {
   font-size: 13px;
-  color: #555555;
+  color: var(--text-disabled);
   margin: 0 0 16px;
 }
 
@@ -51,14 +51,14 @@
   align-items: center;
   gap: 12px;
   padding: 10px 16px;
-  background: #111111;
-  border: 1px solid #1e1e1e;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
   border-radius: 8px;
   transition: background 0.15s ease;
 }
 
 .blockedRow:hover {
-  background: #161616;
+  background: var(--bg-overlay);
 }
 
 .avatar {
@@ -70,7 +70,7 @@
   justify-content: center;
   font-size: 12px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   flex-shrink: 0;
   user-select: none;
 }
@@ -79,15 +79,15 @@
   flex: 1;
   font-size: 14px;
   font-weight: 500;
-  color: #dddddd;
+  color: var(--text-secondary);
 }
 
 .unblockBtn {
   padding: 6px 14px;
   background: transparent;
-  border: 1px solid #2a2a2a;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #888888;
+  color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
@@ -96,8 +96,8 @@
 }
 
 .unblockBtn:hover {
-  border-color: #FF6B00;
-  color: #FF6B00;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* ── Empty state ─────────────────────────────────────────────────────────── */
@@ -108,19 +108,19 @@
   align-items: center;
   gap: 10px;
   padding: 32px;
-  background: #111111;
-  border: 1px solid #1e1e1e;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
 .emptyText {
   font-size: 13px;
-  color: #444444;
+  color: var(--text-disabled);
 }
 
 .errorText {
   font-size: 12px;
-  color: #ff4444;
+  color: var(--danger);
   margin-bottom: 12px;
 }
 
@@ -142,9 +142,9 @@
 .resetAllBtn {
   padding: 6px 14px;
   background: transparent;
-  border: 1px solid #2a2a2a;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #666666;
+  color: var(--text-disabled);
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
@@ -155,8 +155,8 @@
 }
 
 .resetAllBtn:hover {
-  border-color: #444444;
-  color: #aaaaaa;
+  border-color: var(--text-disabled);
+  color: var(--text-secondary);
 }
 
 .hotkeyTable {
@@ -170,21 +170,21 @@
   align-items: center;
   gap: 12px;
   padding: 10px 16px;
-  background: #111111;
-  border: 1px solid #1e1e1e;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
   border-radius: 8px;
   transition: border-color 0.15s ease;
 }
 
 .hotkeyRowEditing {
-  border-color: #FF6B00;
+  border-color: var(--accent);
 }
 
 .hotkeyLabel {
   flex: 1;
   font-size: 13px;
   font-weight: 500;
-  color: #cccccc;
+  color: var(--text-secondary);
 }
 
 .hotkeyBinding {
@@ -196,25 +196,25 @@
 .kbd {
   display: inline-block;
   padding: 3px 8px;
-  background: #1a1a1a;
-  border: 1px solid #2e2e2e;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
   border-radius: 4px;
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 12px;
   font-weight: 600;
-  color: #dddddd;
+  color: var(--text-secondary);
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
 .kbdRecorded {
-  border-color: #FF6B00;
-  color: #FF6B00;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .recordingHint {
   font-size: 12px;
-  color: #FF6B00;
+  color: var(--accent);
   font-style: italic;
   white-space: nowrap;
 }
@@ -231,9 +231,9 @@
 .cancelBtn {
   padding: 5px 12px;
   background: transparent;
-  border: 1px solid #2a2a2a;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #888888;
+  color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
@@ -242,8 +242,8 @@
 }
 
 .editBtn:hover {
-  border-color: #FF6B00;
-  color: #FF6B00;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .resetOneBtn {
@@ -252,18 +252,18 @@
 }
 
 .resetOneBtn:hover {
-  border-color: #444444;
-  color: #aaaaaa;
+  border-color: var(--text-disabled);
+  color: var(--text-secondary);
 }
 
 .saveBtn {
-  border-color: #FF6B00;
-  color: #FF6B00;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .saveBtn:hover:not(:disabled) {
-  background: #FF6B00;
-  color: #ffffff;
+  background: var(--accent);
+  color: var(--text-primary);
 }
 
 .saveBtn:disabled {
@@ -272,18 +272,18 @@
 }
 
 .cancelBtn:hover {
-  border-color: #444444;
-  color: #aaaaaa;
+  border-color: var(--text-disabled);
+  color: var(--text-secondary);
 }
 
 /* ── Diagnostics ──────────────────────────────────────────────────────────── */
 
 .diagnosticsBtn {
   padding: 8px 20px;
-  background: #FF6B00;
+  background: var(--accent);
   border: none;
   border-radius: 6px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -292,5 +292,5 @@
 }
 
 .diagnosticsBtn:hover {
-  background: #e05e00;
+  background: var(--accent-active);
 }

@@ -15,8 +15,8 @@
 }
 
 .card {
-  background: #111111;
-  border: 1px solid #1e1e1e;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
   width: 100%;
@@ -35,7 +35,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .message {
@@ -43,7 +43,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #888888;
+  color: var(--text-secondary);
 }
 
 .buttons {
@@ -66,20 +66,20 @@
 }
 
 .cancelBtn {
-  background: #1e1e1e;
-  color: #888888;
+  background: var(--bg-overlay);
+  color: var(--text-secondary);
 }
 
 .cancelBtn:hover {
-  background: #2a2a2a;
-  color: #ffffff;
+  background: var(--border);
+  color: var(--text-primary);
 }
 
 .confirmBtn {
-  background: #ef4444;
-  color: #ffffff;
+  background: var(--danger);
+  color: var(--text-primary);
 }
 
 .confirmBtn:hover {
-  background: #dc2626;
+  background: color-mix(in srgb, var(--danger) 85%, black);
 }
