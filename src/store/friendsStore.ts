@@ -1,6 +1,7 @@
-import { invoke } from "@tauri-apps/api/core";
-import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+import type { UnlistenFn } from "@tauri-apps/api/event";
 import { create } from "zustand";
+import { ipc } from "../lib/ipc/commands";
+import { events } from "../lib/ipc/events";
 import type { BlockedUser, Friend, MyStatus } from "../types/friends";
 
 interface FriendsState {
@@ -42,7 +43,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
   loadFriends: async () => {
     set({ isLoading: true, error: null });
     try {
-      const friends = await invoke<Friend[]>("get_friends");
+      const friends = await ipc.friends.getFriends();
       set({ friends, isLoading: false });
     } catch (err) {
       set({ isLoading: false, error: String(err) });
@@ -57,7 +58,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
       ),
     }));
     try {
-      await invoke<void>("add_friend", { userId });
+      await ipc.friends.addFriend(userId);
     } catch (err) {
       set({ friends: prev, error: String(err) });
     }
@@ -65,7 +66,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
 
   acceptFriend: async (requestId) => {
     try {
-      await invoke<void>("accept_friend", { requestId });
+      await ipc.friends.acceptFriend(requestId);
     } catch (err) {
       set({ error: String(err) });
     }
@@ -73,7 +74,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
 
   rejectFriend: async (requestId) => {
     try {
-      await invoke<void>("reject_friend", { requestId });
+      await ipc.friends.rejectFriend(requestId);
     } catch (err) {
       set({ error: String(err) });
     }
@@ -88,7 +89,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
       ),
     }));
     try {
-      await invoke<void>("remove_friend", { friendId });
+      await ipc.friends.removeFriend(friendId);
     } catch (err) {
       set({ friends: prev, error: String(err) });
     }
@@ -113,7 +114,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
         : state.blockedUsers,
     }));
     try {
-      await invoke<void>("block_user", { userId });
+      await ipc.friends.blockUser(userId);
     } catch (err) {
       set({ friends: prev, blockedUsers: prevBlocked, error: String(err) });
     }
@@ -125,7 +126,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
       blockedUsers: state.blockedUsers.filter((u) => u.id !== userId),
     }));
     try {
-      await invoke<void>("unblock_user", { userId });
+      await ipc.friends.unblockUser(userId);
       // Reload friends so the unblocked user reappears
       await get().loadFriends();
     } catch (err) {
@@ -135,7 +136,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
 
   loadBlockedUsers: async () => {
     try {
-      const blockedUsers = await invoke<BlockedUser[]>("get_blocked_users");
+      const blockedUsers = await ipc.friends.getBlockedUsers();
       set({ blockedUsers });
     } catch (err) {
       set({ error: String(err) });
@@ -146,7 +147,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
     const prevStatus = get().myStatus;
     set({ myStatus: status });
     try {
-      await invoke<void>("set_my_status", { status, game: game ?? null });
+      await ipc.friends.setMyStatus(status, game ?? null);
     } catch (err) {
       set({ myStatus: prevStatus, error: String(err) });
     }
@@ -158,8 +159,7 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
 
   initListeners: async () => {
     const unlisteners: UnlistenFn[] = await Promise.all([
-      listen<Friend>("presence_update", (event) => {
-        const f = event.payload;
+      events.listen("presence_update", (f) => {
         // Ignore updates from blocked users
         const blockedIds = new Set(get().blockedUsers.map((u) => u.id));
         if (blockedIds.has(f.user_id)) return;
@@ -180,11 +180,11 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
           ),
         }));
       }),
-      listen<null>("ws_disconnected", () => set({ wsConnected: false })),
-      listen<null>("ws_connected", () => set({ wsConnected: true })),
+      events.listen("ws_disconnected", () => set({ wsConnected: false })),
+      events.listen("ws_connected", () => set({ wsConnected: true })),
     ]);
 
-    const connected = await invoke<boolean>("get_ws_connected");
+    const connected = await ipc.friends.getWsConnected();
     set({ wsConnected: connected });
 
     return () => unlisteners.forEach((fn) => fn());

@@ -1,22 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
 import {
   getCurrentWindow,
   LogicalPosition,
 } from "@tauri-apps/api/window";
+import { ipc } from "../../lib/ipc/commands";
+import { events } from "../../lib/ipc/events";
+import type { OverlayParticipantPayload } from "../../lib/ipc/events";
 import styles from "./OverlayApp.module.css";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-interface OverlayParticipant {
-  identity: string;
-  display_name: string;
-  is_muted: boolean;
-  is_speaking: boolean;
-}
+type OverlayParticipant = OverlayParticipantPayload;
 
 // ---------------------------------------------------------------------------
 // Avatar colours (no green — reserved for speaking ring)
@@ -86,16 +82,15 @@ export function OverlayApp() {
   // ── Receive overlay updates ───────────────────────────────────────────────
   useEffect(() => {
     let unlisten: (() => void) | undefined;
-    listen<{ participants: OverlayParticipant[]; room_name: string; is_muted: boolean }>(
-      "overlay_update",
-      (event) => {
-        console.log("[overlay] overlay_update received:", event.payload);
-        setParticipants(event.payload.participants);
-        setRoomName(event.payload.room_name);
-        setIsMuted(event.payload.is_muted);
-        setLocalMuted(event.payload.is_muted);
-      },
-    ).then((fn) => { unlisten = fn; });
+    events
+      .listen("overlay_update", (payload) => {
+        console.log("[overlay] overlay_update received:", payload);
+        setParticipants(payload.participants);
+        setRoomName(payload.room_name);
+        setIsMuted(payload.is_muted);
+        setLocalMuted(payload.is_muted);
+      })
+      .then((fn) => { unlisten = fn; });
     return () => { unlisten?.(); };
   }, []);
 
@@ -153,7 +148,7 @@ export function OverlayApp() {
     console.log("[overlay] invoking overlay_toggle_mute");
     setLocalMuted((prev) => !prev); // optimistic — corrected by overlay_update
     try {
-      await invoke<void>("overlay_toggle_mute");
+      await ipc.overlay.overlayToggleMute();
       console.log("[overlay] invoke done");
     } catch (e) {
       console.error("[overlay] overlay_toggle_mute failed:", e);
@@ -164,7 +159,7 @@ export function OverlayApp() {
   async function handleLeave() {
     console.log("[overlay] invoking overlay_leave_call");
     try {
-      await invoke<void>("overlay_leave_call");
+      await ipc.overlay.overlayLeaveCall();
     } catch (e) {
       console.error("[overlay] overlay_leave_call failed:", e);
     }
@@ -173,7 +168,7 @@ export function OverlayApp() {
   async function handleClose() {
     console.log("[overlay] invoking overlay_close");
     try {
-      await invoke<void>("overlay_close");
+      await ipc.overlay.overlayClose();
     } catch (e) {
       console.error("[overlay] overlay_close failed:", e);
     }

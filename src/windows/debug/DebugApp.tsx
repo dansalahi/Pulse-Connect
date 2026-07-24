@@ -1,21 +1,7 @@
 import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-
-// ---------------------------------------------------------------------------
-// Inlined types (debug window is a separate JS runtime from the main app)
-// ---------------------------------------------------------------------------
-
-interface VoiceStateData {
-  is_in_call: boolean;
-  room_name: string | null;
-  is_muted: boolean;
-  is_deafened: boolean;
-}
-
-interface HotkeyBindingData {
-  action: "Mute" | "Deafen" | "Ptt" | "Leave";
-  accelerator: string;
-}
+import { ipc } from "../../lib/ipc/commands";
+import type { HotkeyBinding as HotkeyBindingData } from "../../types/hotkeys";
+import type { VoiceState as VoiceStateData } from "../../types/voice";
 
 // ---------------------------------------------------------------------------
 // Styles (inline — no CSS modules in this entry point)
@@ -158,9 +144,9 @@ export function DebugApp() {
   async function refresh() {
     try {
       const [ws, voice, keys] = await Promise.all([
-        invoke<boolean>("get_ws_connected"),
-        invoke<VoiceStateData>("get_voice_state"),
-        invoke<HotkeyBindingData[]>("get_hotkey_bindings"),
+        ipc.friends.getWsConnected(),
+        ipc.voice.getVoiceState(),
+        ipc.hotkeys.getHotkeyBindings(),
       ]);
       setWsConnected(ws);
       setVoiceState(voice);

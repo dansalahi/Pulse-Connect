@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { ipc } from "../lib/ipc/commands";
 import { useFriendsStore } from "../store/friendsStore";
 import { toast } from "../components/Toast";
 import type { HotkeyAction, HotkeyBinding } from "../types/hotkeys";
@@ -75,7 +75,7 @@ export function SettingsPage() {
 
   async function loadBindings() {
     try {
-      const result = await invoke<HotkeyBinding[]>("get_hotkey_bindings");
+      const result = await ipc.hotkeys.getHotkeyBindings();
       const map = new Map(result.map((b) => [b.action, b.accelerator]));
       setBindings(
         ACTION_ORDER.map((action) => ({
@@ -131,7 +131,7 @@ export function SettingsPage() {
   // ── Handlers ──────────────────────────────────────────────────────────────
   async function saveBinding(action: HotkeyAction, accelerator: string) {
     try {
-      await invoke<void>("set_hotkey_binding", { action, accelerator });
+      await ipc.hotkeys.setHotkeyBinding(action, accelerator);
       setBindings((prev) =>
         prev.map((b) => (b.action === action ? { ...b, accelerator } : b)),
       );
@@ -146,7 +146,7 @@ export function SettingsPage() {
   }
 
   async function resetAll() {
-    await invoke<void>("reset_hotkeys");
+    await ipc.hotkeys.resetHotkeys();
     await loadBindings();
     toast("Hotkeys reset to defaults", "info");
   }
@@ -157,7 +157,7 @@ export function SettingsPage() {
 
   async function sendDiagnostics() {
     try {
-      await invoke<string>("send_diagnostics");
+      await ipc.telemetry.sendDiagnostics();
       toast("Diagnostic report saved to Downloads", "success");
     } catch (e) {
       const msg =

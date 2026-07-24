@@ -1,6 +1,6 @@
-import { invoke } from "@tauri-apps/api/core";
-import { emit } from "@tauri-apps/api/event";
 import { create } from "zustand";
+import { ipc } from "../lib/ipc/commands";
+import { events } from "../lib/ipc/events";
 import {
   Room,
   RoomEvent,
@@ -134,7 +134,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
   async function connectToRoom(friendId: string, roomName: string) {
     let resp: VoiceJoinResponse;
     try {
-      resp = await invoke<VoiceJoinResponse>("join_voice", { roomName, friendId });
+      resp = await ipc.voice.joinVoice(roomName, friendId);
       console.log("[voice] token received:", { url: resp.url, room_name: resp.room_name });
     } catch (error: unknown) {
       const msg = readError(error);
@@ -298,7 +298,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
 
     // Register PTT shortcut only while in a call so bare keys (e.g. Space) don't
     // fire outside of calls.
-    try { await invoke<void>("enable_ptt_hotkey"); } catch { /* best-effort */ }
+    try { await ipc.hotkeys.enablePttHotkey(); } catch { /* best-effort */ }
 
     toast("Connected to call", "success");
   }
@@ -327,10 +327,10 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       const next = !get().isOverlayVisible;
       set({ isOverlayVisible: next });
       if (next) {
-        void invoke<void>("show_overlay").then(() => {
+        void ipc.overlay.showOverlay().then(() => {
           // Push current state immediately after the overlay window appears
           const s = get();
-          void emit("overlay_update", {
+          void events.emit("overlay_update", {
             participants: s.participants.map((p) => ({
               identity: p.identity,
               display_name: p.display_name,
@@ -342,7 +342,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
           });
         });
       } else {
-        void invoke<void>("hide_overlay");
+        void ipc.overlay.hideOverlay();
       }
     },
 
@@ -353,7 +353,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       audioService.playDialTone();
 
       try {
-        await invoke<void>("invite_to_call", { targetUserId: friendId, roomName });
+        await ipc.voice.inviteToCall(friendId, roomName);
       } catch (error: unknown) {
         audioService.stopAll();
         const msg = readError(error);
@@ -367,7 +367,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
         inviteTimeoutHandle = null;
         const { callState: cs, callingTarget: ct } = get();
         if (cs !== "calling" || !ct) return;
-        try { await invoke<void>("cancel_call", { targetUserId: ct.userId }); } catch { /* best-effort */ }
+        try { await ipc.voice.cancelCall(ct.userId); } catch { /* best-effort */ }
         audioService.stopAll();
         set({ callState: "idle", callingTarget: null });
         toast("No answer", "info");
@@ -380,7 +380,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       audioService.stopAll();
       set({ callState: "idle", callingTarget: null });
       if (!callingTarget) return;
-      try { await invoke<void>("cancel_call", { targetUserId: callingTarget.userId }); } catch { /* best-effort */ }
+      try { await ipc.voice.cancelCall(callingTarget.userId); } catch { /* best-effort */ }
     },
 
     // ── Callee flow ────────────────────────────────────────────────────────
@@ -390,11 +390,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       audioService.stopAll();
       set({ callState: "connected", incomingCall: null });
       try {
-        await invoke<void>("respond_to_call", {
-          accepted: true,
-          roomName: incomingCall.roomName,
-          callerUserId: incomingCall.fromUserId,
-        });
+        await ipc.voice.respondToCall(true, incomingCall.roomName, incomingCall.fromUserId);
         await connectToRoom(incomingCall.fromUserId, incomingCall.roomName);
       } catch (error: unknown) {
         audioService.stopAll();
@@ -408,11 +404,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       audioService.stopAll();
       set({ callState: "idle", incomingCall: null });
       try {
-        await invoke<void>("respond_to_call", {
-          accepted: false,
-          roomName: incomingCall.roomName,
-          callerUserId: incomingCall.fromUserId,
-        });
+        await ipc.voice.respondToCall(false, incomingCall.roomName, incomingCall.fromUserId);
       } catch { /* best-effort */ }
     },
 
@@ -430,12 +422,12 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       }
       if (room) await room.disconnect();
       audioService.stopAll();
-      try { await invoke<void>("leave_voice"); } catch { /* ignore */ }
+      try { await ipc.voice.leaveVoice(); } catch { /* ignore */ }
       // Unregister PTT so Space (or whatever key) works normally outside calls
-      try { await invoke<void>("disable_ptt_hotkey"); } catch { /* ignore */ }
+      try { await ipc.hotkeys.disablePttHotkey(); } catch { /* ignore */ }
       // Auto-hide overlay when the call ends
       if (get().isOverlayVisible) {
-        try { await invoke<void>("hide_overlay"); } catch { /* ignore */ }
+        try { await ipc.overlay.hideOverlay(); } catch { /* ignore */ }
         set({ isOverlayVisible: false });
       }
       set({ callState: "idle", isInCall: false, roomName: null, isMuted: false, isDeafened: false, room: null, participants: [], currentAudioTrack: null });
@@ -456,7 +448,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
           ),
         });
         if (room?.localParticipant) await room.localParticipant.setMicrophoneEnabled(!next);
-        try { await invoke<void>("set_muted", { muted: next }); } catch { /* best-effort */ }
+        try { await ipc.voice.setMuted(next); } catch { /* best-effort */ }
       } finally {
         muteToggleInProgress = false;
       }
@@ -476,7 +468,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
           ),
         });
         if (room?.localParticipant) await room.localParticipant.setMicrophoneEnabled(!muted);
-        try { await invoke<void>("set_muted", { muted }); } catch { /* best-effort */ }
+        try { await ipc.voice.setMuted(muted); } catch { /* best-effort */ }
       } finally {
         muteToggleInProgress = false;
       }
@@ -493,7 +485,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
           });
         });
       }
-      try { await invoke<void>("set_deafened", { deafened: next }); } catch { set({ isDeafened }); }
+      try { await ipc.voice.setDeafened(next); } catch { set({ isDeafened }); }
     },
 
     setParticipantVolume: (identity, volume) => {
@@ -513,7 +505,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       if (!roomName) return;
       toast(`Inviting ${displayName}…`, "info");
       try {
-        await invoke<void>("invite_to_call", { targetUserId: friendId, roomName });
+        await ipc.voice.inviteToCall(friendId, roomName);
       } catch (error: unknown) {
         toast(readError(error), "error");
       }
@@ -619,12 +611,11 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
 // Breadcrumb: emit a telemetry event whenever the call state machine transitions.
 useVoiceStore.subscribe((state, prev) => {
   if (state.callState !== prev.callState) {
-    void invoke("add_breadcrumb", {
-      category: "call_state",
-      message: `${prev.callState} -> ${state.callState}`,
-    }).catch((e: unknown) => {
-      console.warn("[telemetry] add_breadcrumb failed:", e);
-    });
+    void ipc.telemetry
+      .addBreadcrumb("call_state", `${prev.callState} -> ${state.callState}`)
+      .catch((e: unknown) => {
+        console.warn("[telemetry] add_breadcrumb failed:", e);
+      });
   }
 });
 
@@ -648,7 +639,7 @@ useVoiceStore.subscribe((state) => {
   if (payloadStr === lastOverlayPayload) return;
   lastOverlayPayload = payloadStr;
 
-  void emit("overlay_update", payload);
+  void events.emit("overlay_update", payload);
 });
 
 if (typeof navigator !== "undefined" && navigator.mediaDevices) {

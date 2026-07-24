@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { ipc } from "../lib/ipc/commands";
 import { useVoiceStore } from "../store/voiceStore";
 import { useFriendsStore } from "../store/friendsStore";
 import type { Friend } from "../types/friends";
@@ -280,7 +280,8 @@ export function VoicePage() {
 
   // Load hotkey bindings once so the legend stays in sync with user settings.
   useEffect(() => {
-    invoke<HotkeyBinding[]>("get_hotkey_bindings")
+    ipc.hotkeys
+      .getHotkeyBindings()
       .then(setHotkeys)
       .catch(() => { /* legend is cosmetic — silently ignore */ });
   }, []);

@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api/core";
 import { create } from "zustand";
+import { ipc } from "../lib/ipc/commands";
 import type { AppError, AuthUser } from "../types/auth";
 
 interface AuthState {
@@ -27,7 +27,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const user = await invoke<AuthUser>("login", { email, password });
+      const user = await ipc.auth.login(email, password);
       set({ user, isAuthenticated: true, isLoading: false });
     } catch (err) {
       set({ isLoading: false, error: err as AppError });
@@ -37,7 +37,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   logout: async () => {
     set({ isLoading: true });
     try {
-      await invoke<void>("logout");
+      await ipc.auth.logout();
     } finally {
       set({ user: null, isAuthenticated: false, isLoading: false, error: null });
     }
@@ -46,7 +46,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   bootstrap: async () => {
     set({ isLoading: true });
     try {
-      const user = await invoke<AuthUser | null>("get_session");
+      const user = await ipc.auth.getSession();
       if (user) {
         set({ user, isAuthenticated: true, isLoading: false });
       } else {
