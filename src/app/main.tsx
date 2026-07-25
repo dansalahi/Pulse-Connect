@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { ipc } from "./lib/ipc/commands";
-import "./ui/tokens.css";
-import "./ui/base.css";
+import { ipc } from "../lib/ipc/commands";
+import "../ui/tokens.css";
+import "../ui/base.css";
 
 // Global error handlers — breadcrumb telemetry only, no network calls.
 // Failures are swallowed (.catch) so these never affect the app.

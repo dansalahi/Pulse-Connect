@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ipc } from "../../lib/ipc/commands";
-import type { HotkeyBinding as HotkeyBindingData } from "../../types/hotkeys";
-import type { VoiceState as VoiceStateData } from "../../types/voice";
+import type { HotkeyBinding as HotkeyBindingData } from "../../features/settings/types/hotkeys";
+import type { VoiceState as VoiceStateData } from "../../features/voice/types/voice";
 
 // ---------------------------------------------------------------------------
 // Styles (inline — no CSS modules in this entry point)

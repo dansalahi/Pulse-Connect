@@ -28,7 +28,7 @@ vi.mock("@tauri-apps/api/event", () => ({
 }));
 
 // Import AFTER mocks are in place (vi.mock calls are hoisted by Vitest, so this is safe)
-import { OverlayApp } from "../windows/overlay/OverlayApp";
+import { OverlayApp } from "../features/overlay/components/OverlayApp";
 
 // ---------------------------------------------------------------------------
 

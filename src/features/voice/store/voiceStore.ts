@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { ipc } from "../lib/ipc/commands";
-import { events } from "../lib/ipc/events";
+import { ipc } from "../../../lib/ipc/commands";
+import { events } from "../../../lib/ipc/events";
 import {
   Room,
   RoomEvent,
@@ -10,8 +10,8 @@ import {
   type RemoteParticipant,
   type LocalParticipant,
 } from "livekit-client";
-import { toast } from "../components/Toast";
-import { audioService } from "../services/audioService";
+import { toast } from "../../../ui/Toast";
+import { audioService } from "../../../lib/audio/audioService";
 import type {
   CallingTarget,
   IncomingCall,

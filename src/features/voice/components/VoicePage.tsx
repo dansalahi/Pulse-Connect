@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { ipc } from "../lib/ipc/commands";
+import { ipc } from "../../../lib/ipc/commands";
 import { useVoiceStore } from "../store/voiceStore";
-import { useFriendsStore } from "../store/friendsStore";
-import type { Friend } from "../types/friends";
-import type { HotkeyBinding } from "../types/hotkeys";
+import { useFriendsStore } from "../../friends/store/friendsStore";
+import type { Friend } from "../../friends/types/friends";
+import type { HotkeyBinding } from "../../settings/types/hotkeys";
 import type { VoiceParticipant } from "../types/voice";
 import styles from "./VoicePage.module.css";
 

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { LoadingScreen } from "./components/LoadingScreen";
-import { MainLayout } from "./pages/MainLayout";
-import { LoginPage } from "./pages/LoginPage";
-import { useAuthStore } from "./store/authStore";
-import { mountEventBridge } from "./lib/eventBridge";
+import { LoadingScreen } from "../ui/LoadingScreen";
+import { MainLayout } from "./MainLayout";
+import { LoginPage } from "../features/auth/components/LoginPage";
+import { useAuthStore } from "../features/auth/store/authStore";
+import { mountEventBridge } from "../lib/eventBridge";
 
 export default function App() {
   const { isAuthenticated, isLoading, bootstrap } = useAuthStore();

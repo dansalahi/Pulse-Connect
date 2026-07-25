@@ -1,6 +1,6 @@
 import { emit, listen } from "@tauri-apps/api/event";
 import type { Event, UnlistenFn } from "@tauri-apps/api/event";
-import type { Friend } from "../../types/friends";
+import type { Friend } from "../../features/friends/types/friends";
 
 // ---------------------------------------------------------------------------
 // Typed catalog of every Tauri event used with listen()/emit() across the

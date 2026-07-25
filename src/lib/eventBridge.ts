@@ -1,6 +1,6 @@
 import { ipc } from "./ipc/commands";
 import { events } from "./ipc/events";
-import { useVoiceStore } from "../store/voiceStore";
+import { useVoiceStore } from "../features/voice/store/voiceStore";
 
 // ---------------------------------------------------------------------------
 // Global Tauri event listeners for the app's lifetime: call signaling,

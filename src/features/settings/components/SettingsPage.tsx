@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { ipc } from "../lib/ipc/commands";
-import { useFriendsStore } from "../store/friendsStore";
-import { toast } from "../components/Toast";
+import { ipc } from "../../../lib/ipc/commands";
+import { useFriendsStore } from "../../friends/store/friendsStore";
+import { toast } from "../../../ui/Toast";
 import type { HotkeyAction, HotkeyBinding } from "../types/hotkeys";
 import styles from "./SettingsPage.module.css";
 

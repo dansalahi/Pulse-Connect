@@ -1,7 +1,7 @@
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { create } from "zustand";
-import { ipc } from "../lib/ipc/commands";
-import { events } from "../lib/ipc/events";
+import { ipc } from "../../../lib/ipc/commands";
+import { events } from "../../../lib/ipc/events";
 import type { BlockedUser, Friend, MyStatus } from "../types/friends";
 
 interface FriendsState {

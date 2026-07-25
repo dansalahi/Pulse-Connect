@@ -20,7 +20,7 @@ vi.mock("@tauri-apps/api/event", () => ({
 // The voice store pulls in livekit-client and browser media APIs that don't
 // exist in jsdom, so it's mocked to a plain object of spies. eventBridge only
 // ever reaches it through useVoiceStore.getState()/setState().
-vi.mock("../store/voiceStore", () => {
+vi.mock("../features/voice/store/voiceStore", () => {
   const state = {
     callState: "idle",
     isOverlayVisible: false,
@@ -43,8 +43,8 @@ vi.mock("../store/voiceStore", () => {
 
 // Imported after the mocks above so both pick up the mocked modules.
 import { mountEventBridge } from "../lib/eventBridge";
-import { useVoiceStore } from "../store/voiceStore";
-import type { CallState } from "../store/voiceStore";
+import { useVoiceStore } from "../features/voice/store/voiceStore";
+import type { CallState } from "../features/voice/store/voiceStore";
 
 // ---------------------------------------------------------------------------
 // Helpers

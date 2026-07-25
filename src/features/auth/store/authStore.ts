@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ipc } from "../lib/ipc/commands";
+import { ipc } from "../../../lib/ipc/commands";
 import type { AppError, AuthUser } from "../types/auth";
 
 interface AuthState {

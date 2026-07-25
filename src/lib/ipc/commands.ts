@@ -1,8 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { AuthUser } from "../../types/auth";
-import type { BlockedUser, Friend, MyStatus } from "../../types/friends";
-import type { HotkeyAction, HotkeyBinding } from "../../types/hotkeys";
-import type { VoiceJoinResponse, VoiceState } from "../../types/voice";
+import type { AuthUser } from "../../features/auth/types/auth";
+import type { BlockedUser, Friend, MyStatus } from "../../features/friends/types/friends";
+import type { HotkeyAction, HotkeyBinding } from "../../features/settings/types/hotkeys";
+import type { VoiceJoinResponse, VoiceState } from "../../features/voice/types/voice";
 
 // ---------------------------------------------------------------------------
 // Typed wrappers around every Tauri command invoked from the frontend,

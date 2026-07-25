@@ -6,10 +6,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { ConfirmDialog } from "../components/ConfirmDialog";
-import { useAuthStore } from "../store/authStore";
+import { ConfirmDialog } from "../../../ui/ConfirmDialog";
+import { useAuthStore } from "../../auth/store/authStore";
 import { useFriendsStore } from "../store/friendsStore";
-import { useVoiceStore } from "../store/voiceStore";
+import { useVoiceStore } from "../../voice/store/voiceStore";
 import type { Friend, FriendStatus } from "../types/friends";
 import styles from "./FriendsPage.module.css";
 

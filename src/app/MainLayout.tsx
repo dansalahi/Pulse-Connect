@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { ConfirmDialog } from "../components/ConfirmDialog";
-import { IncomingCallDialog } from "../components/IncomingCallDialog";
-import { ToastContainer } from "../components/Toast";
-import { useAuthStore } from "../store/authStore";
-import { useFriendsStore } from "../store/friendsStore";
-import { useVoiceStore } from "../store/voiceStore";
-import { FriendsPage } from "./FriendsPage";
-import { SettingsPage } from "./SettingsPage";
-import { VoicePage } from "./VoicePage";
-import type { MyStatus } from "../types/friends";
+import { ConfirmDialog } from "../ui/ConfirmDialog";
+import { IncomingCallDialog } from "../features/voice/components/IncomingCallDialog";
+import { ToastContainer } from "../ui/Toast";
+import { useAuthStore } from "../features/auth/store/authStore";
+import { useFriendsStore } from "../features/friends/store/friendsStore";
+import { useVoiceStore } from "../features/voice/store/voiceStore";
+import { FriendsPage } from "../features/friends/components/FriendsPage";
+import { SettingsPage } from "../features/settings/components/SettingsPage";
+import { VoicePage } from "../features/voice/components/VoicePage";
+import type { MyStatus } from "../features/friends/types/friends";
 import styles from "./MainLayout.module.css";
 
 type NavItem = "friends" | "settings" | "voice";

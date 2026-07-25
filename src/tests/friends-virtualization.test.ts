@@ -1,9 +1,9 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createElement } from "react";
-import { useFriendsStore } from "../store/friendsStore";
-import { FriendsPage } from "../pages/FriendsPage";
-import type { Friend, FriendStatus } from "../types/friends";
+import { useFriendsStore } from "../features/friends/store/friendsStore";
+import { FriendsPage } from "../features/friends/components/FriendsPage";
+import type { Friend, FriendStatus } from "../features/friends/types/friends";
 
 // ---------------------------------------------------------------------------
 // Helpers

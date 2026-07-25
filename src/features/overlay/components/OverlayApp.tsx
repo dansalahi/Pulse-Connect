@@ -3,9 +3,9 @@ import {
   getCurrentWindow,
   LogicalPosition,
 } from "@tauri-apps/api/window";
-import { ipc } from "../../lib/ipc/commands";
-import { events } from "../../lib/ipc/events";
-import type { OverlayParticipantPayload } from "../../lib/ipc/events";
+import { ipc } from "../../../lib/ipc/commands";
+import { events } from "../../../lib/ipc/events";
+import type { OverlayParticipantPayload } from "../../../lib/ipc/events";
 import styles from "./OverlayApp.module.css";
 
 // ---------------------------------------------------------------------------
