@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useVoiceStore } from "../store/voiceStore";
+import { useSignalingStore } from "../store/signalingStore";
 import styles from "./IncomingCallDialog.module.css";
 
 const TIMEOUT_SEC = 30;
@@ -12,7 +12,7 @@ function colorFor(name: string): string {
 }
 
 export function IncomingCallDialog() {
-  const { callState, incomingCall, acceptCall, declineCall } = useVoiceStore();
+  const { callState, incomingCall, acceptCall, declineCall } = useSignalingStore();
   const [remaining, setRemaining] = useState(TIMEOUT_SEC);
 
   // Reset countdown when a new call arrives

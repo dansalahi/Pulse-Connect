@@ -4,7 +4,8 @@ import { IncomingCallDialog } from "../features/voice/components/IncomingCallDia
 import { ToastContainer } from "../ui/Toast";
 import { useAuthStore } from "../features/auth/store/authStore";
 import { useFriendsStore } from "../features/friends/store/friendsStore";
-import { useVoiceStore } from "../features/voice/store/voiceStore";
+import { useSignalingStore } from "../features/voice/store/signalingStore";
+import { useSessionStore } from "../features/voice/store/sessionStore";
 import { FriendsPage } from "../features/friends/components/FriendsPage";
 import { SettingsPage } from "../features/settings/components/SettingsPage";
 import { VoicePage } from "../features/voice/components/VoicePage";
@@ -75,7 +76,8 @@ const STATUS_OPTIONS: Array<{ value: MyStatus; label: string }> = [
 export function MainLayout() {
   const { user, logout } = useAuthStore();
   const { wsConnected, myStatus, setMyStatus } = useFriendsStore();
-  const { isInCall, callState, incomingCall } = useVoiceStore();
+  const { isInCall } = useSessionStore();
+  const { callState, incomingCall } = useSignalingStore();
   const [activeNav, setActiveNav] = useState<NavItem>("friends");
   const [menuPos, setMenuPos] = useState<{ left: number; bottom: number } | null>(null);
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);

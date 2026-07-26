@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ipc } from "../../../lib/ipc/commands";
-import { useVoiceStore } from "../store/voiceStore";
+import { useSessionStore } from "../store/sessionStore";
 import { useFriendsStore } from "../../friends/store/friendsStore";
 import type { Friend } from "../../friends/types/friends";
 import type { HotkeyBinding } from "../../settings/types/hotkeys";
@@ -219,7 +219,7 @@ export function VoicePage() {
     inviteFriend,
     isOverlayVisible,
     toggleOverlay,
-  } = useVoiceStore();
+  } = useSessionStore();
 
   const { friends } = useFriendsStore();
 
@@ -272,7 +272,7 @@ export function VoicePage() {
   }, [showDebug, roomName, participants.length, room]);
 
   // Load available audio devices on mount (and when the call starts).
-  // The module-level devicechange listener in voiceStore handles hot-plug.
+  // The module-level devicechange listener in sessionStore handles hot-plug.
   useEffect(() => {
     void loadDevices();
   // eslint-disable-next-line react-hooks/exhaustive-deps

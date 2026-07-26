@@ -9,7 +9,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { ConfirmDialog } from "../../../ui/ConfirmDialog";
 import { useAuthStore } from "../../auth/store/authStore";
 import { useFriendsStore } from "../store/friendsStore";
-import { useVoiceStore } from "../../voice/store/voiceStore";
+import { useSignalingStore } from "../../voice/store/signalingStore";
+import { useSessionStore } from "../../voice/store/sessionStore";
 import type { Friend, FriendStatus } from "../types/friends";
 import styles from "./FriendsPage.module.css";
 
@@ -163,7 +164,8 @@ interface FriendDetailProps {
 function FriendDetail({ friend, onRemove, onAddFriend, onBlock, onJoinVoice, onCancelCall }: FriendDetailProps) {
   const initials = friend.display_name.slice(0, 2).toUpperCase();
   const avatarColor = AVATAR_COLORS[stableColorIndex(friend.id)];
-  const { isInCall, callState, callingTarget } = useVoiceStore();
+  const { isInCall } = useSessionStore();
+  const { callState, callingTarget } = useSignalingStore();
 
   const isCallingThisFriend = callState === "calling" && callingTarget?.userId === friend.user_id;
   const canCall = friend.is_friend && (friend.status === "Online" || friend.status === "InGame");
@@ -238,7 +240,10 @@ export function FriendsPage() {
     initListeners,
   } = useFriendsStore();
 
-  const { joinVoice, cancelCall, error: voiceError, clearVoiceError } = useVoiceStore();
+  const { joinVoice, cancelCall, error: signalingError, clearVoiceError: clearSignalingError } = useSignalingStore();
+  const { error: sessionError, clearVoiceError: clearSessionError } = useSessionStore();
+  const voiceError = signalingError ?? sessionError;
+  const clearVoiceError = () => { clearSignalingError(); clearSessionError(); };
   const { user } = useAuthStore();
 
   const [hasLoaded, setHasLoaded] = useState(false);

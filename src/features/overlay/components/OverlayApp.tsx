@@ -143,7 +143,7 @@ export function OverlayApp() {
   // ── Action handlers ───────────────────────────────────────────────────────
 
   // Emit events to the main window — no invoke/capability needed.
-  // App.tsx listens to these and delegates to voiceStore actions.
+  // eventBridge.ts listens to these and delegates to the signaling/session stores.
   async function handleMute() {
     console.log("[overlay] invoking overlay_toggle_mute");
     setLocalMuted((prev) => !prev); // optimistic — corrected by overlay_update

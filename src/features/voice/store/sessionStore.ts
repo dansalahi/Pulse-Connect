@@ -12,12 +12,8 @@ import {
 } from "livekit-client";
 import { toast } from "../../../ui/Toast";
 import { audioService } from "../../../lib/audio/audioService";
-import type {
-  CallingTarget,
-  IncomingCall,
-  VoiceJoinResponse,
-  VoiceParticipant,
-} from "../types/voice";
+import { useSignalingStore } from "./signalingStore";
+import type { VoiceJoinResponse, VoiceParticipant } from "../types/voice";
 
 // ---------------------------------------------------------------------------
 // setSinkId is a non-standard extension missing from older TS DOM types.
@@ -28,17 +24,10 @@ interface AudioSinkElement extends HTMLAudioElement {
 }
 
 // ---------------------------------------------------------------------------
-// Call state machine
-// ---------------------------------------------------------------------------
-
-export type CallState = "idle" | "calling" | "incoming" | "connected";
-
-// ---------------------------------------------------------------------------
 // Store interfaces
 // ---------------------------------------------------------------------------
 
-interface VoiceState {
-  callState: CallState;
+interface SessionState {
   isInCall: boolean;
   roomName: string | null;
   isMuted: boolean;
@@ -46,8 +35,6 @@ interface VoiceState {
   participants: VoiceParticipant[];
   room: Room | null;
   error: string | null;
-  callingTarget: CallingTarget | null;
-  incomingCall: IncomingCall | null;
   // Device management
   inputDevices: MediaDeviceInfo[];
   outputDevices: MediaDeviceInfo[];
@@ -57,11 +44,10 @@ interface VoiceState {
   currentAudioTrack: LocalAudioTrack | null;
 }
 
-interface VoiceActions {
-  joinVoice: (friendId: string, displayName: string, roomName: string) => Promise<void>;
-  cancelCall: () => Promise<void>;
-  acceptCall: () => Promise<void>;
-  declineCall: () => Promise<void>;
+interface SessionActions {
+  // Called by signalingStore once a call has been accepted, to establish the
+  // LiveKit connection. friendId is the other party's user id.
+  connectToRoom: (friendId: string, roomName: string) => Promise<void>;
   leaveVoice: () => Promise<void>;
   loadDevices: () => Promise<void>;
   setInputDevice: (deviceId: string) => Promise<void>;
@@ -74,14 +60,9 @@ interface VoiceActions {
   toggleOverlay: () => void;
   // Invite a friend into the current call
   inviteFriend: (friendId: string, displayName: string) => Promise<void>;
-  // Signal handlers — called directly from App.tsx Tauri event listeners
-  handleIncomingCall: (fromUserId: string, fromDisplayName: string, roomName: string) => void;
-  handleCallAccepted: (fromUserId: string, roomName: string) => void;
-  handleCallDeclined: () => void;
-  handleCallCancelled: () => void;
 }
 
-type VoiceStore = VoiceState & VoiceActions;
+type SessionStore = SessionState & SessionActions;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -109,28 +90,19 @@ function participantFromLK(
   };
 }
 
-// Module-level timeout — survives store re-renders
-let inviteTimeoutHandle: ReturnType<typeof setTimeout> | null = null;
-
 // Interval for local audio-level speaking detection
 let speakingPollHandle: ReturnType<typeof setInterval> | null = null;
 // Guard against concurrent toggleMute calls (e.g. double-registered listener in StrictMode)
 let muteToggleInProgress = false;
-function clearInviteTimeout() {
-  if (inviteTimeoutHandle !== null) {
-    clearTimeout(inviteTimeoutHandle);
-    inviteTimeoutHandle = null;
-  }
-}
-
 
 // ---------------------------------------------------------------------------
 // Store
 // ---------------------------------------------------------------------------
 
-export const useVoiceStore = create<VoiceStore>((set, get) => {
+export const useSessionStore = create<SessionStore>((set, get) => {
 
-  // Establish the LiveKit connection. callState must already be "connected".
+  // Establish the LiveKit connection. Called once signaling has transitioned
+  // to "connected" — see signalingStore's acceptCall / handleCallAccepted.
   async function connectToRoom(friendId: string, roomName: string) {
     let resp: VoiceJoinResponse;
     try {
@@ -140,7 +112,8 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       const msg = readError(error);
       console.error("[voice] join_voice failed:", error);
       audioService.stopAll();
-      set({ callState: "idle", callingTarget: null, incomingCall: null, error: msg });
+      useSignalingStore.getState().resetToIdle();
+      set({ error: msg });
       return;
     }
 
@@ -150,12 +123,14 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
 
     if (!lkUrl?.startsWith("ws")) {
       audioService.stopAll();
-      set({ callState: "idle", error: `Invalid LiveKit URL: "${lkUrl}"` });
+      useSignalingStore.getState().resetToIdle();
+      set({ error: `Invalid LiveKit URL: "${lkUrl}"` });
       return;
     }
     if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
       audioService.stopAll();
-      set({ callState: "idle", error: "Microphone not available. Check System Preferences → Privacy → Microphone." });
+      useSignalingStore.getState().resetToIdle();
+      set({ error: "Microphone not available. Check System Preferences → Privacy → Microphone." });
       return;
     }
 
@@ -168,7 +143,8 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       console.log("[voice] microphone permission granted");
     } catch (error: unknown) {
       audioService.stopAll();
-      set({ callState: "idle", error: `Microphone permission denied: ${readError(error)}` });
+      useSignalingStore.getState().resetToIdle();
+      set({ error: `Microphone permission denied: ${readError(error)}` });
       return;
     }
 
@@ -229,7 +205,8 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
     } catch (error: unknown) {
       console.error("[voice] room.connect failed:", error);
       audioService.stopAll();
-      set({ callState: "idle", error: `Could not connect: ${readError(error)}` });
+      useSignalingStore.getState().resetToIdle();
+      set({ error: `Could not connect: ${readError(error)}` });
       return;
     }
 
@@ -305,7 +282,6 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
 
   return {
     // ── state defaults ─────────────────────────────────────────────────────
-    callState: "idle",
     isInCall: false,
     roomName: null,
     isMuted: false,
@@ -313,8 +289,6 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
     participants: [],
     room: null,
     error: null,
-    callingTarget: null,
-    incomingCall: null,
     inputDevices: [],
     outputDevices: [],
     selectedInputId: "",
@@ -346,67 +320,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       }
     },
 
-    // ── Caller flow ────────────────────────────────────────────────────────
-    joinVoice: async (friendId, displayName, roomName) => {
-      console.log("[voice] inviting:", displayName, "room:", roomName);
-      set({ error: null, callState: "calling", callingTarget: { userId: friendId, displayName, roomName } });
-      audioService.playDialTone();
-
-      try {
-        await ipc.voice.inviteToCall(friendId, roomName);
-      } catch (error: unknown) {
-        audioService.stopAll();
-        const msg = readError(error);
-        toast(msg, "error");
-        set({ callState: "idle", callingTarget: null });
-        return;
-      }
-
-      // 30s timeout — auto-cancel if no response
-      inviteTimeoutHandle = setTimeout(async () => {
-        inviteTimeoutHandle = null;
-        const { callState: cs, callingTarget: ct } = get();
-        if (cs !== "calling" || !ct) return;
-        try { await ipc.voice.cancelCall(ct.userId); } catch { /* best-effort */ }
-        audioService.stopAll();
-        set({ callState: "idle", callingTarget: null });
-        toast("No answer", "info");
-      }, 30_000);
-    },
-
-    cancelCall: async () => {
-      clearInviteTimeout();
-      const { callingTarget } = get();
-      audioService.stopAll();
-      set({ callState: "idle", callingTarget: null });
-      if (!callingTarget) return;
-      try { await ipc.voice.cancelCall(callingTarget.userId); } catch { /* best-effort */ }
-    },
-
-    // ── Callee flow ────────────────────────────────────────────────────────
-    acceptCall: async () => {
-      const { incomingCall } = get();
-      if (!incomingCall) return;
-      audioService.stopAll();
-      set({ callState: "connected", incomingCall: null });
-      try {
-        await ipc.voice.respondToCall(true, incomingCall.roomName, incomingCall.fromUserId);
-        await connectToRoom(incomingCall.fromUserId, incomingCall.roomName);
-      } catch (error: unknown) {
-        audioService.stopAll();
-        set({ callState: "idle", error: readError(error) });
-      }
-    },
-
-    declineCall: async () => {
-      const { incomingCall } = get();
-      if (!incomingCall) return;
-      audioService.stopAll();
-      set({ callState: "idle", incomingCall: null });
-      try {
-        await ipc.voice.respondToCall(false, incomingCall.roomName, incomingCall.fromUserId);
-      } catch { /* best-effort */ }
-    },
+    connectToRoom,
 
     // ── In-call controls ───────────────────────────────────────────────────
     leaveVoice: async () => {
@@ -430,7 +344,8 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
         try { await ipc.overlay.hideOverlay(); } catch { /* ignore */ }
         set({ isOverlayVisible: false });
       }
-      set({ callState: "idle", isInCall: false, roomName: null, isMuted: false, isDeafened: false, room: null, participants: [], currentAudioTrack: null });
+      set({ isInCall: false, roomName: null, isMuted: false, isDeafened: false, room: null, participants: [], currentAudioTrack: null });
+      useSignalingStore.getState().resetToIdle();
       toast("Left call", "info");
     },
 
@@ -511,41 +426,6 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
       }
     },
 
-    // ── Call signal handlers (called from App.tsx Tauri listeners) ────────────
-    handleIncomingCall: (fromUserId, fromDisplayName, roomName) => {
-      console.log("[voice] incoming call from", fromDisplayName, "room:", roomName);
-      audioService.playRingtone();
-      set({
-        callState: "incoming",
-        incomingCall: { fromUserId, fromDisplayName, roomName },
-      });
-    },
-
-    handleCallAccepted: (fromUserId, roomName) => {
-      console.log("[voice] call accepted — connecting to room:", roomName);
-      const { callState: cs, callingTarget } = get();
-      if (cs !== "calling" || !callingTarget) return;
-      clearInviteTimeout();
-      audioService.stopAll();
-      set({ callState: "connected", callingTarget: null });
-      void connectToRoom(fromUserId, roomName);
-    },
-
-    handleCallDeclined: () => {
-      console.log("[voice] call declined");
-      clearInviteTimeout();
-      audioService.stopAll();
-      set({ callState: "idle", callingTarget: null });
-      toast("Call declined", "info");
-    },
-
-    handleCallCancelled: () => {
-      console.log("[voice] call cancelled by caller");
-      audioService.stopAll();
-      set({ callState: "idle", incomingCall: null });
-      toast("Call cancelled", "info");
-    },
-
     // ── Device management ─────────────────────────────────────────────────
     loadDevices: async () => {
       if (!navigator.mediaDevices?.enumerateDevices) return;
@@ -601,27 +481,12 @@ export const useVoiceStore = create<VoiceStore>((set, get) => {
 });
 
 // ---------------------------------------------------------------------------
-// Module-level device-change listener — runs once when the module is imported
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
 // Push participant data to overlay window whenever participants change
 // ---------------------------------------------------------------------------
 
-// Breadcrumb: emit a telemetry event whenever the call state machine transitions.
-useVoiceStore.subscribe((state, prev) => {
-  if (state.callState !== prev.callState) {
-    void ipc.telemetry
-      .addBreadcrumb("call_state", `${prev.callState} -> ${state.callState}`)
-      .catch((e: unknown) => {
-        console.warn("[telemetry] add_breadcrumb failed:", e);
-      });
-  }
-});
-
 let lastOverlayPayload = "";
 
-useVoiceStore.subscribe((state) => {
+useSessionStore.subscribe((state) => {
   if (!state.isOverlayVisible) return;
 
   const payload = {
@@ -644,19 +509,19 @@ useVoiceStore.subscribe((state) => {
 
 if (typeof navigator !== "undefined" && navigator.mediaDevices) {
   navigator.mediaDevices.addEventListener("devicechange", () => {
-    const store = useVoiceStore.getState();
+    const store = useSessionStore.getState();
     const prevInputId = store.selectedInputId;
     const prevOutputId = store.selectedOutputId;
 
     void store.loadDevices().then(() => {
-      const { inputDevices, outputDevices, isInCall } = useVoiceStore.getState();
+      const { inputDevices, outputDevices, isInCall } = useSessionStore.getState();
 
       if (prevInputId && !inputDevices.some((d) => d.deviceId === prevInputId)) {
         const fallback = inputDevices[0]?.deviceId;
         if (fallback) {
           toast("Microphone disconnected, switched to default", "info");
-          if (isInCall) void useVoiceStore.getState().setInputDevice(fallback);
-          else useVoiceStore.setState({ selectedInputId: fallback });
+          if (isInCall) void useSessionStore.getState().setInputDevice(fallback);
+          else useSessionStore.setState({ selectedInputId: fallback });
         }
       }
 
@@ -664,7 +529,7 @@ if (typeof navigator !== "undefined" && navigator.mediaDevices) {
         const fallback = outputDevices[0]?.deviceId;
         if (fallback) {
           toast("Speaker disconnected, switched to default", "info");
-          void useVoiceStore.getState().setOutputDevice(fallback);
+          void useSessionStore.getState().setOutputDevice(fallback);
         }
       }
     });
