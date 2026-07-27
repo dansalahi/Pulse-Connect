@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tauri_plugin_store::StoreExt;
 
-use crate::error::AppError;
+use crate::shared::error::AppError;
 
 const API_BASE: &str = "http://localhost:3000";
 // Plugin-store file holds only the non-sensitive user email so bootstrap
@@ -249,41 +249,3 @@ fn validate_password(password: &str) -> Result<(), AppError> {
     Ok(())
 }
 
-// ---------------------------------------------------------------------------
-// Tauri commands
-// ---------------------------------------------------------------------------
-
-#[tauri::command]
-#[specta::specta]
-pub async fn login(
-    email: String,
-    password: String,
-    app: tauri::AppHandle,
-    manager: tauri::State<'_, AuthManager>,
-    telemetry: tauri::State<'_, crate::telemetry::Telemetry>,
-) -> Result<AuthUser, AppError> {
-    crate::validation::validate_string(&email, 254, "email")?;
-    crate::validation::validate_string(&password, 128, "password")?;
-    telemetry.add("ipc", "login called".into());
-    manager.login(&email, &password, &app).await
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn logout(
-    app: tauri::AppHandle,
-    manager: tauri::State<'_, AuthManager>,
-    telemetry: tauri::State<'_, crate::telemetry::Telemetry>,
-) -> Result<(), AppError> {
-    telemetry.add("ipc", "logout called".into());
-    manager.logout(&app).await;
-    Ok(())
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn get_session(
-    manager: tauri::State<'_, AuthManager>,
-) -> Result<Option<AuthUser>, AppError> {
-    Ok(manager.get_user().await)
-}

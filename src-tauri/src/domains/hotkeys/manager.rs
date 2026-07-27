@@ -6,7 +6,7 @@ use tauri::{AppHandle, Emitter};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 use tauri_plugin_store::StoreExt;
 
-use crate::error::AppError;
+use crate::shared::error::AppError;
 
 const STORE_FILE: &str = "hotkeys.json";
 const STORE_KEY: &str = "bindings";
@@ -179,53 +179,14 @@ impl HotkeyManager {
 }
 
 // ---------------------------------------------------------------------------
-// Commands
-// ---------------------------------------------------------------------------
-
-#[tauri::command]
-pub fn get_hotkey_bindings(manager: tauri::State<HotkeyManager>) -> Vec<HotkeyBinding> {
-    manager.get_bindings()
-}
-
-#[tauri::command]
-pub fn set_hotkey_binding(
-    app: AppHandle,
-    manager: tauri::State<HotkeyManager>,
-    action: HotkeyAction,
-    accelerator: String,
-) -> Result<(), AppError> {
-    crate::validation::validate_string(&accelerator, 64, "accelerator")?;
-    manager.set_binding(&app, action, accelerator)
-}
-
-#[tauri::command]
-pub fn reset_hotkeys(app: AppHandle, manager: tauri::State<HotkeyManager>) {
-    manager.reset(&app);
-}
-
-/// Called by the frontend when a voice call becomes active.
-/// Registers the PTT shortcut so it is only active during calls.
-#[tauri::command]
-pub fn enable_ptt_hotkey(app: AppHandle, manager: tauri::State<HotkeyManager>) -> Result<(), AppError> {
-    manager.enable_ptt(&app)
-}
-
-/// Called by the frontend when a voice call ends.
-/// Unregisters the PTT shortcut so bare keys like Space work normally.
-#[tauri::command]
-pub fn disable_ptt_hotkey(app: AppHandle, manager: tauri::State<HotkeyManager>) {
-    manager.disable_ptt(&app);
-}
-
-// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::error::AppError;
-    use crate::validation::validate_string;
+    use crate::shared::error::AppError;
+    use crate::shared::validation::validate_string;
 
     /// Empty accelerator string must be rejected before any OS registration attempt.
     #[test]

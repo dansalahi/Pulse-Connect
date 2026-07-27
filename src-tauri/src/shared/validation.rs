@@ -1,4 +1,4 @@
-use crate::error::AppError;
+use crate::shared::error::AppError;
 
 pub fn validate_string(s: &str, max_len: usize, field: &str) -> Result<(), AppError> {
     if s.is_empty() {

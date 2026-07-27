@@ -3,7 +3,7 @@ use std::sync::Mutex;
 
 use sysinfo::{Pid, System};
 
-use crate::error::AppError;
+use crate::shared::error::AppError;
 
 // ---------------------------------------------------------------------------
 // Stats payload
@@ -93,7 +93,7 @@ pub fn get_perf_stats(tracker: tauri::State<'_, PerfTracker>) -> Result<PerfStat
     }
     let memory_peak_mb = *peak;
 
-    let cold_start_ms = crate::COLD_START_MS.get().copied().unwrap_or(0);
+    let cold_start_ms = crate::app::state::COLD_START_MS.get().copied().unwrap_or(0);
 
     Ok(PerfStats {
         memory_mb,

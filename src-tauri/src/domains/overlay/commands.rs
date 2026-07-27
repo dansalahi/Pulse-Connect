@@ -1,6 +1,6 @@
 use tauri::{Emitter, Manager};
 
-use crate::error::AppError;
+use crate::shared::error::AppError;
 
 /// Bridge command: overlay frontend invokes this, Rust broadcasts the event
 /// to ALL windows so the main window frontend receives it via listen().
