@@ -5,6 +5,7 @@ use crate::domains::auth::AuthManager;
 use crate::domains::friends::FriendsManager;
 use crate::domains::hotkeys::HotkeyManager;
 use crate::domains::telemetry;
+use crate::gateway::Gateway;
 
 pub fn run(
     app: &mut tauri::App,
@@ -78,17 +79,20 @@ pub fn run(
 
     let auth = app.state::<AuthManager>().inner().clone();
     let friends = app.state::<FriendsManager>().inner().clone();
+    let gateway = app.state::<Gateway>().inner().clone();
+    friends.register_routes(&gateway);
+
     let app_handle = app.handle().clone();
     tauri::async_runtime::spawn(async move {
         auth.bootstrap(&app_handle).await;
-        friends.start(app_handle);
+        gateway.start(app_handle);
     });
 
     if let Some(window) = app.get_webview_window("main") {
-        let friends_for_close = app.state::<FriendsManager>().inner().clone();
+        let gateway_for_close = app.state::<Gateway>().inner().clone();
         window.on_window_event(move |event| {
             if let tauri::WindowEvent::Destroyed = event {
-                friends_for_close.signal_shutdown();
+                gateway_for_close.signal_shutdown();
             }
         });
     }

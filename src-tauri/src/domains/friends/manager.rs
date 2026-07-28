@@ -1,19 +1,14 @@
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::time::Duration;
-use tokio::sync::{Notify, RwLock};
+use tokio::sync::RwLock;
 
-use futures_util::{SinkExt, StreamExt};
-use rand::Rng;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use tauri::{Emitter, Manager};
-use tokio_tungstenite::{connect_async, tungstenite::Message};
+use tauri::Emitter;
 
-use crate::{domains::auth::AuthManager, shared::error::AppError};
+use crate::gateway::Gateway;
+use crate::shared::error::AppError;
 
 const API_BASE: &str = "http://localhost:3000";
-const WS_URL: &str = "ws://localhost:3001";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -75,20 +70,6 @@ fn validate_id(id: &str) -> Result<(), AppError> {
 }
 
 // ---------------------------------------------------------------------------
-// Backoff
-// ---------------------------------------------------------------------------
-
-fn backoff_base_ms(attempt: u32) -> u64 {
-    (1_000u64 << attempt.min(5)).min(30_000)
-}
-
-fn backoff_duration(attempt: u32) -> Duration {
-    let base = backoff_base_ms(attempt);
-    let jitter = rand::thread_rng().gen_range(0u64..=1_000);
-    Duration::from_millis(base + jitter)
-}
-
-// ---------------------------------------------------------------------------
 // FriendsManager
 // ---------------------------------------------------------------------------
 
@@ -96,8 +77,6 @@ fn backoff_duration(attempt: u32) -> Duration {
 pub struct FriendsManager {
     http: Client,
     friends: Arc<RwLock<Vec<Friend>>>,
-    ws_connected: Arc<AtomicBool>,
-    shutdown: Arc<Notify>,
 }
 
 impl FriendsManager {
@@ -105,27 +84,29 @@ impl FriendsManager {
         Self {
             http: Client::new(),
             friends: Arc::new(RwLock::new(Vec::new())),
-            ws_connected: Arc::new(AtomicBool::new(false)),
-            shutdown: Arc::new(Notify::new()),
         }
     }
 
-    /// Called when the main window is closing — signals the WS loop to send a
-    /// clean close frame so the backend marks this user Offline immediately.
-    pub fn signal_shutdown(&self) {
-        self.shutdown.notify_one();
-    }
-
-    pub fn is_ws_connected(&self) -> bool {
-        self.ws_connected.load(Ordering::Relaxed)
-    }
-
-    #[tracing::instrument(skip(self, app_handle))]
-    pub fn start(&self, app_handle: tauri::AppHandle) {
+    /// Registers this domain's handlers on the gateway's router — presence
+    /// updates and call signaling routing — so the gateway can dispatch
+    /// inbound messages here without owning any friends-domain logic.
+    pub fn register_routes(&self, gateway: &Gateway) {
         let manager = self.clone();
-        tauri::async_runtime::spawn(async move {
-            manager.ws_loop(app_handle).await;
+        gateway.router().register("presence_update", move |data, app| {
+            let manager = manager.clone();
+            async move { manager.apply_presence_update(data, &app).await }
         });
+
+        for kind in ["call_invite", "call_accepted", "call_declined", "call_cancelled"] {
+            gateway.router().register(kind, move |data, app| async move {
+                tracing::info!(kind = %kind, data = %data, "Emitting call_invite event to frontend");
+                if let Err(e) = app.emit(kind, &data) {
+                    tracing::warn!(error = %e, kind = %kind, "Failed to emit call event");
+                } else {
+                    tracing::info!(kind = %kind, "Call event emitted successfully");
+                }
+            });
+        }
     }
 
     #[tracing::instrument(skip(self, token))]
@@ -289,141 +270,8 @@ impl FriendsManager {
     }
 
     // -----------------------------------------------------------------------
-    // WebSocket internals
+    // Gateway route handlers
     // -----------------------------------------------------------------------
-
-    async fn ws_loop(&self, app: tauri::AppHandle) {
-        let mut attempt = 0u32;
-        loop {
-            tracing::info!(attempt, "Connecting to WebSocket");
-            match connect_async(WS_URL).await {
-                Ok((ws_stream, _)) => {
-                    tracing::info!("WebSocket connected");
-                    self.ws_connected.store(true, Ordering::Relaxed);
-                    let _ = app.emit("ws_connected", ());
-                    attempt = 0;
-
-                    // Get access token for WS auth handshake.
-                    let token = match app.state::<AuthManager>().get_access_token().await {
-                        Ok(t) => t,
-                        Err(_) => {
-                            tracing::warn!("No access token available for WS auth");
-                            String::new()
-                        }
-                    };
-
-                    let (mut write, mut read) = ws_stream.split();
-
-                    // Send auth immediately after connect.
-                    let auth_msg = serde_json::json!({ "type": "auth", "token": token });
-                    if let Err(e) = write.send(Message::Text(auth_msg.to_string().into())).await {
-                        tracing::warn!(error = %e, "Failed to send WS auth message");
-                    }
-
-                    // Pin the shutdown future once per connection so select! can reuse it.
-                    let shutdown_notified = self.shutdown.notified();
-                    tokio::pin!(shutdown_notified);
-
-                    'inner: loop {
-                        tokio::select! {
-                            biased; // check shutdown first
-
-                            _ = &mut shutdown_notified => {
-                                tracing::info!("Shutdown signal: sending WS close frame");
-                                let _ = write.send(Message::Close(None)).await;
-                                self.ws_connected.store(false, Ordering::Relaxed);
-                                let _ = app.emit("ws_disconnected", ());
-                                return; // exit ws_loop entirely — no more reconnects
-                            }
-
-                            maybe = read.next() => {
-                                match maybe {
-                                    Some(Ok(Message::Text(text))) => {
-                                        // Reply to server ping immediately.
-                                        if let Ok(v) = serde_json::from_str::<serde_json::Value>(&text) {
-                                            if v.get("type").and_then(|t| t.as_str()) == Some("ping") {
-                                                let _ = write
-                                                    .send(Message::Text(
-                                                        serde_json::json!({ "type": "pong" })
-                                                            .to_string()
-                                                            .into(),
-                                                    ))
-                                                    .await;
-                                                continue 'inner;
-                                            }
-                                        }
-                                        tracing::debug!(msg = %text, "WS message received");
-                                        self.handle_ws_message(&text, &app).await;
-                                    }
-                                    Some(Ok(Message::Close(_))) => {
-                                        tracing::info!("WS close frame received");
-                                        break 'inner;
-                                    }
-                                    Some(Ok(_)) => {}
-                                    Some(Err(e)) => {
-                                        tracing::warn!(error = %e, "WS stream error");
-                                        break 'inner;
-                                    }
-                                    None => break 'inner,
-                                }
-                            }
-                        }
-                    }
-
-                    self.ws_connected.store(false, Ordering::Relaxed);
-                    tracing::warn!("WebSocket disconnected, will reconnect");
-                    let _ = app.emit("ws_disconnected", ());
-                }
-                Err(e) => {
-                    self.ws_connected.store(false, Ordering::Relaxed);
-                    tracing::warn!(error = %e, "WebSocket connection failed");
-                    let _ = app.emit("ws_disconnected", ());
-                }
-            }
-
-            let delay = backoff_duration(attempt);
-            tracing::info!(delay_ms = delay.as_millis(), "Waiting before reconnect");
-            tokio::time::sleep(delay).await;
-            attempt = attempt.saturating_add(1);
-        }
-    }
-
-    async fn handle_ws_message(&self, text: &str, app: &tauri::AppHandle) {
-        #[derive(Deserialize)]
-        struct Envelope {
-            #[serde(rename = "type")]
-            kind: String,
-            #[serde(default)]
-            data: serde_json::Value,
-        }
-
-        let envelope = match serde_json::from_str::<Envelope>(text) {
-            Ok(e) => e,
-            Err(e) => {
-                tracing::warn!(error = %e, "Failed to parse WS message");
-                return;
-            }
-        };
-
-        match envelope.kind.as_str() {
-            "presence_update" => self.apply_presence_update(envelope.data, app).await,
-            "auth_ok" => tracing::info!("WS auth acknowledged by server"),
-            "pong" => tracing::debug!("WS pong received"),
-            "call_invite" | "call_accepted" | "call_declined" | "call_cancelled" => {
-                tracing::info!(
-                    kind = %envelope.kind,
-                    data = %envelope.data,
-                    "Emitting call_invite event to frontend"
-                );
-                if let Err(e) = app.emit(&envelope.kind, &envelope.data) {
-                    tracing::warn!(error = %e, kind = %envelope.kind, "Failed to emit call event");
-                } else {
-                    tracing::info!(kind = %envelope.kind, "Call event emitted successfully");
-                }
-            }
-            other => tracing::debug!(kind = other, "Unknown WS event type"),
-        }
-    }
 
     async fn apply_presence_update(&self, data: serde_json::Value, app: &tauri::AppHandle) {
         #[derive(Deserialize)]
@@ -579,17 +427,6 @@ mod tests {
         assert_eq!(friends[0].status, FriendStatus::InGame);
         assert_eq!(friends[1].status, FriendStatus::Offline);
         assert_ne!(friends[0].status, original_status);
-    }
-
-    #[test]
-    fn test_backoff_sequence() {
-        assert_eq!(backoff_base_ms(0), 1_000);
-        assert_eq!(backoff_base_ms(1), 2_000);
-        assert_eq!(backoff_base_ms(2), 4_000);
-        assert_eq!(backoff_base_ms(3), 8_000);
-        assert_eq!(backoff_base_ms(4), 16_000);
-        assert_eq!(backoff_base_ms(5), 30_000);
-        assert_eq!(backoff_base_ms(10), 30_000);
     }
 
     #[test]

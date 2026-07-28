@@ -1,4 +1,5 @@
 use crate::domains::auth::AuthManager;
+use crate::gateway::Gateway;
 use crate::shared::error::AppError;
 use crate::shared::validation::validate_string;
 
@@ -6,8 +7,8 @@ use super::manager::{BlockedUser, Friend, FriendsManager};
 
 #[tauri::command]
 #[specta::specta]
-pub fn get_ws_connected(manager: tauri::State<'_, FriendsManager>) -> bool {
-    manager.is_ws_connected()
+pub fn get_ws_connected(gateway: tauri::State<'_, Gateway>) -> bool {
+    gateway.is_connected()
 }
 
 #[tauri::command]

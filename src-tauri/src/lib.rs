@@ -1,5 +1,6 @@
 mod app;
 mod domains;
+mod gateway;
 mod shared;
 
 use domains::auth::AuthManager;
@@ -7,6 +8,7 @@ use domains::friends::FriendsManager;
 use domains::hotkeys::HotkeyManager;
 use domains::telemetry::{self, Telemetry};
 use domains::voice::VoiceManager;
+use gateway::Gateway;
 
 // Re-export for integration tests in tests/
 pub use domains::voice::VoiceManager as VoiceManagerPub;
@@ -20,6 +22,7 @@ pub fn run() {
     let voice_manager = VoiceManager::new();
     let hotkey_manager = HotkeyManager::new();
     let telemetry_state = Telemetry::new();
+    let gateway = Gateway::new();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
@@ -37,6 +40,7 @@ pub fn run() {
         .manage(hotkey_manager.clone())
         .manage(telemetry_state)
         .manage(telemetry::PerfTracker::new())
+        .manage(gateway)
         .setup(move |app| app::setup::run(app, hotkey_manager))
         .invoke_handler(tauri::generate_handler![
             domains::auth::login,
