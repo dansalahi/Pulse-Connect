@@ -137,25 +137,37 @@ pnpm tauri dev -- -- --debug
 
 ```
 pulse-connect/
-├── dev.sh                 # one-command dev environment
-├── mock-backend/          # Express + ws mock server, 6 in-memory users
-├── src/                   # React + TypeScript frontend
-│   ├── components/        # Toast, IncomingCallDialog, LoadingScreen
-│   ├── pages/             # Friends, Voice, Settings, Login
-│   ├── store/             # Zustand stores — auth, friends, voice
-│   ├── types/             # TS types mirroring Rust AppError variants
-│   ├── windows/           # separate React roots: overlay, debug
-│   └── tests/             # Vitest suites
-└── src-tauri/             # Rust core
+├── dev.sh                    # one-command dev environment
+├── mock-backend/             # Express + ws mock server, 6 in-memory users
+├── src/                      # React + TypeScript frontend
+│   ├── app/                  # App.tsx (routing/auth gate), MainLayout, React root
+│   ├── features/             # one slice per domain — components/ store/ types/
+│   │   ├── auth/             # login, authStore
+│   │   ├── friends/          # virtualized friends list, friendsStore
+│   │   ├── voice/            # VoicePage, signalingStore + sessionStore
+│   │   ├── overlay/           # in-call overlay pill UI
+│   │   └── settings/         # hotkey rebinding UI
+│   ├── lib/
+│   │   ├── ipc/               # typed Tauri command/event wrappers
+│   │   ├── eventBridge.ts    # wires backend events into the Zustand stores
+│   │   └── audio/             # dial tone / ringtone playback
+│   ├── ui/                   # design-token primitives: Toast, ConfirmDialog, LoadingScreen
+│   ├── windows/               # separate React roots: overlay, debug
+│   └── tests/                 # Vitest suites
+└── src-tauri/                # Rust core
     ├── src/
-    │   ├── auth.rs        # login/refresh, keychain token storage
-    │   ├── friends.rs     # presence WebSocket, reconnect backoff
-    │   ├── voice.rs       # VoiceAdapter trait, LiveKit + stub adapters
-    │   ├── overlay.rs     # overlay window control, NSWindow level
-    │   ├── hotkeys.rs     # global shortcuts, PTT lifecycle
-    │   ├── telemetry.rs   # local breadcrumbs, PII scrubbing, diagnostics export
-    │   └── lib.rs         # Tauri builder, plugins, panic hook
-    └── capabilities/      # per-window permission sets
+    │   ├── app/                # setup.rs (startup wiring), state.rs (cold-start timing)
+    │   ├── domains/
+    │   │   ├── auth/           # login/refresh, keychain token storage
+    │   │   ├── friends/       # friend CRUD, presence cache, gateway route handlers
+    │   │   ├── voice/          # VoiceAdapter trait, LiveKit + stub adapters
+    │   │   ├── overlay/        # overlay window control, NSWindow level
+    │   │   ├── hotkeys/        # global shortcuts, PTT lifecycle
+    │   │   └── telemetry/     # local breadcrumbs, PII scrubbing, diagnostics export
+    │   ├── gateway/            # presence WebSocket lifecycle + message router
+    │   ├── shared/             # AppError, IPC input validation
+    │   └── lib.rs              # Tauri builder, plugins, panic hook
+    └── capabilities/          # per-window permission sets
 ```
 
 More depth in [ARCHITECTURE.md](./ARCHITECTURE.md) — module map, voice latency budget, overlay strategy, and the reasoning behind the bigger design calls.
