@@ -1,3 +1,6 @@
+//! Deterministic no-op `VoiceAdapter` used in place of `LiveKitAdapter` for
+//! CI/tests, so the voice domain can be exercised without a real LiveKit server.
+
 use crate::shared::error::AppError;
 
 use super::adapter::VoiceAdapter;

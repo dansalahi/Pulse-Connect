@@ -1,3 +1,10 @@
+/**
+ * UI for the always-on-top overlay window (a separate Tauri window shown
+ * during calls). Mirrors call participants/mute state pushed from
+ * sessionStore via `overlay_update` events, and sends control actions
+ * (mute, leave, close) back to the main window via emitted events rather
+ * than IPC commands.
+ */
 import { useEffect, useRef, useState } from "react";
 import {
   getCurrentWindow,

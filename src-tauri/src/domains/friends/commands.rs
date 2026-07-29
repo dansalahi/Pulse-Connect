@@ -1,3 +1,6 @@
+//! Tauri command wrappers for the friends domain: validate IPC input, pull
+//! the access token from `AuthManager`, and delegate to `FriendsManager`.
+
 use crate::domains::auth::AuthManager;
 use crate::gateway::Gateway;
 use crate::shared::error::AppError;

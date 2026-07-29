@@ -1,3 +1,8 @@
+/**
+ * Core behavior tests for the friends feature: store-level search filtering
+ * and status grouping, a large-list render smoke test, and the optimistic
+ * remove-friend flow (immediate removal plus rollback on server failure).
+ */
 import { invoke } from "@tauri-apps/api/core";
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";

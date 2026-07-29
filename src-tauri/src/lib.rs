@@ -1,3 +1,6 @@
+//! Crate root: constructs domain managers and the gateway, registers Tauri
+//! plugins/state/commands, and hands off to `app::setup::run` on startup.
+
 mod app;
 mod domains;
 mod gateway;

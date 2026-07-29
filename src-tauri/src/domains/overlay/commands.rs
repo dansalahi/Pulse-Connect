@@ -1,3 +1,7 @@
+//! Tauri commands for the floating overlay window: broadcasting mute/leave/close
+//! intents to the main window via app-wide events, and showing/hiding the overlay
+//! itself (including macOS-specific window-level tweaks so it floats above other apps).
+
 use tauri::{Emitter, Manager};
 
 use crate::shared::error::AppError;

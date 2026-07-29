@@ -1,3 +1,6 @@
+//! Process performance tracking: the `PerfTracker` managed state (memory, CPU,
+//! uptime) and the `get_perf_stats` command the frontend polls to display it.
+
 use std::collections::VecDeque;
 use std::sync::Mutex;
 

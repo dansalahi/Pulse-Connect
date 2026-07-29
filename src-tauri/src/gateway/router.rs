@@ -1,3 +1,7 @@
+//! The `Router` that domains register message handlers on: maps inbound
+//! WebSocket message type tags to domain-owned async handlers, so the
+//! gateway can dispatch messages without knowing about domain payloads.
+
 use std::collections::HashMap;
 use std::future::Future;
 use std::pin::Pin;

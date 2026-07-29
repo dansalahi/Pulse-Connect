@@ -1,3 +1,6 @@
+//! Process-lifetime globals for startup performance telemetry: set once
+//! during `setup()` and read elsewhere (e.g. by `domains::telemetry`).
+
 use std::sync::OnceLock;
 use std::time::Instant;
 

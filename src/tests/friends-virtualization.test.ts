@@ -1,3 +1,8 @@
+/**
+ * Regression tests for FriendsPage at scale — confirms it renders without
+ * throwing and search filtering still narrows results with thousands of
+ * friends in the store, guarding against perf/virtualization regressions.
+ */
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createElement } from "react";

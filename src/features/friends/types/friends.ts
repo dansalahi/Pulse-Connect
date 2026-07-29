@@ -1,3 +1,7 @@
+/**
+ * Domain types for friends, pending requests, and blocked users, shared
+ * between friendsStore/UI and the Rust IPC layer's presence/friends commands.
+ */
 export type FriendStatus = "Online" | "InGame" | "DND" | "Offline";
 
 export type MyStatus = "Online" | "InGame" | "DND";

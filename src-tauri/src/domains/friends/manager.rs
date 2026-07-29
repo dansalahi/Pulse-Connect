@@ -1,3 +1,7 @@
+//! Friends domain business logic: HTTP calls for friend/block management and
+//! presence status, plus gateway route registration that relays inbound
+//! presence updates and call-signaling messages to the frontend as events.
+
 use std::sync::Arc;
 use tokio::sync::RwLock;
 

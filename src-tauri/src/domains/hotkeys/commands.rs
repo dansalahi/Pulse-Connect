@@ -1,3 +1,6 @@
+//! Tauri command wrappers for the hotkeys domain: validate IPC input and
+//! delegate binding get/set/reset and PTT enable/disable to `HotkeyManager`.
+
 use tauri::AppHandle;
 
 use crate::shared::error::AppError;

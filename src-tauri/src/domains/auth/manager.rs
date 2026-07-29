@@ -1,3 +1,8 @@
+//! Auth domain business logic: HTTP login/refresh against the backend and
+//! in-memory session state. Refresh-token persistence is split across two
+//! stores — see `store_refresh_token`/`load_refresh_token` — and the access
+//! token is never written to disk, only held as a `SecretString` in memory.
+
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -172,6 +177,10 @@ impl AuthManager {
         *self.access_token.write().await = Some(SecretString::from(token));
     }
 
+    // Refresh-token persistence is split across two stores: the email marker
+    // lives in the (unencrypted) plugin-store file below, while the secret
+    // token itself goes to the OS keychain. The access token is never
+    // persisted at all — it only ever lives in `self.access_token`.
     fn store_refresh_token(
         &self,
         token: &str,

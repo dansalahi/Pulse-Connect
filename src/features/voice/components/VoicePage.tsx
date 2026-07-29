@@ -1,3 +1,8 @@
+/**
+ * Active-call UI: participant grid, control bar (mute/device select, invite,
+ * overlay toggle, leave), and a hotkey legend — all driven by sessionStore,
+ * with invitable friends sourced from friendsStore.
+ */
 import { useEffect, useState } from "react";
 import { ipc } from "../../../lib/ipc/commands";
 import { useSessionStore } from "../store/sessionStore";

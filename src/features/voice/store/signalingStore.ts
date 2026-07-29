@@ -1,3 +1,8 @@
+/**
+ * Zustand store implementing the call-signaling state machine (invite/
+ * accept/decline/cancel) over IPC; on a successful handshake it hands off to
+ * sessionStore to establish the actual LiveKit media connection.
+ */
 import { create } from "zustand";
 import { ipc } from "../../../lib/ipc/commands";
 import { toast } from "../../../ui/Toast";
@@ -7,6 +12,13 @@ import type { CallingTarget, IncomingCall } from "../types/voice";
 
 // ---------------------------------------------------------------------------
 // Call state machine
+//
+// Caller:  idle --joinVoice--> calling --handleCallAccepted--> connected
+//                         \--(decline/cancel/timeout)--> idle
+// Callee:  idle --handleIncomingCall--> incoming --acceptCall--> connected
+//                                            \--declineCall--> idle
+// Either side leaving (sessionStore.leaveVoice) or a cancel/decline signal
+// from the other party calls resetToIdle(), returning to idle.
 // ---------------------------------------------------------------------------
 
 export type CallState = "idle" | "calling" | "incoming" | "connected";

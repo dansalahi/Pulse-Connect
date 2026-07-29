@@ -5,6 +5,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+/**
+ * Friend list + detail view: virtualizes the roster (TanStack Table +
+ * Virtual) so large friend lists stay cheap to render, and kicks off voice
+ * calls through the signaling/session stores.
+ */
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { ConfirmDialog } from "../../../ui/ConfirmDialog";
 import { useAuthStore } from "../../auth/store/authStore";
@@ -319,6 +324,10 @@ export function FriendsPage() {
 
   const rows = table.getRowModel().rows;
 
+  // Rows are a fixed 52px (ROW_H), so estimateSize is exact rather than a guess.
+  // overscan: 10 mounts 10 extra rows above/below the visible window so fast
+  // scrolling doesn't flash blank rows while new ones render; regardless of
+  // friend-list size, only the visible rows + overscan are ever in the DOM.
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => tableBodyRef.current,

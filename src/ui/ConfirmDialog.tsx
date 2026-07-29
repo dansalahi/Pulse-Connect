@@ -1,3 +1,8 @@
+/**
+ * Shared modal confirmation dialog (Cancel/Confirm) with Escape-to-cancel
+ * and backdrop-click-to-cancel, used wherever a feature needs a destructive
+ * action confirmed before proceeding.
+ */
 import { useEffect } from "react";
 import styles from "./ConfirmDialog.module.css";
 

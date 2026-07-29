@@ -1,3 +1,9 @@
+/**
+ * Shared single-slot toast notification system: a Zustand store plus the
+ * `toast()` helper for triggering one from anywhere, and the
+ * `<ToastContainer>` that renders it — mount the container once near the
+ * app root.
+ */
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 import styles from "./Toast.module.css";

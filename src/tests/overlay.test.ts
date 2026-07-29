@@ -1,3 +1,8 @@
+/**
+ * Tests the overlay pill window's click-through behavior: it starts ignoring
+ * pointer events and toggles interactive mode on Ctrl+Shift, verified
+ * against a mocked `@tauri-apps/api/window`.
+ */
 import { render, fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createElement } from "react";

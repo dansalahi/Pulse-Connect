@@ -1,3 +1,7 @@
+/**
+ * Voice/call domain types shared between signalingStore, sessionStore, and
+ * the Rust voice/LiveKit IPC layer (join responses, call state, participants).
+ */
 export interface VoiceState {
   is_in_call: boolean;
   room_name: string | null;

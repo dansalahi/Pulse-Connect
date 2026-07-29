@@ -1,3 +1,6 @@
+//! Defines the `VoiceAdapter` trait that abstracts the voice domain's call
+//! backend, letting `VoiceManager` swap between LiveKit and stub implementations.
+
 use crate::shared::error::AppError;
 
 // ---------------------------------------------------------------------------

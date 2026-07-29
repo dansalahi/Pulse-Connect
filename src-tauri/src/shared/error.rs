@@ -1,3 +1,6 @@
+//! Application-wide error type (`AppError`) returned by Tauri commands across
+//! all domains; serializes to a tagged `{code, message}` shape for the frontend.
+
 use serde::Serialize;
 use thiserror::Error;
 

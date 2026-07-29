@@ -1,3 +1,7 @@
+/**
+ * App root: gates rendering on auth bootstrap (loading → login → main layout)
+ * and mounts the global Tauri event bridge for the app's lifetime.
+ */
 import { useEffect } from "react";
 import { LoadingScreen } from "../ui/LoadingScreen";
 import { MainLayout } from "./MainLayout";

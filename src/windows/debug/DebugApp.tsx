@@ -1,3 +1,8 @@
+/**
+ * Root component of the debug window — polls backend IPC state (websocket,
+ * voice, hotkeys) and browser media devices on a 1s interval to surface a
+ * live diagnostic readout for development.
+ */
 import { useEffect, useState } from "react";
 import { ipc } from "../../lib/ipc/commands";
 import type { HotkeyBinding as HotkeyBindingData } from "../../features/settings/types/hotkeys";

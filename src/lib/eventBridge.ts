@@ -3,6 +3,10 @@ import { events } from "./ipc/events";
 import { useSignalingStore } from "../features/voice/store/signalingStore";
 import { useSessionStore } from "../features/voice/store/sessionStore";
 
+/**
+ * Wires Rust-emitted Tauri events to the Zustand stores — the event-driven
+ * counterpart to the imperative lib/ipc/commands.ts calls.
+ */
 // ---------------------------------------------------------------------------
 // Global Tauri event listeners for the app's lifetime: call signaling,
 // overlay button actions, and global hotkeys. Originally inlined in

@@ -1,3 +1,7 @@
+//! PII scrubbing and the in-memory breadcrumb ring buffer backing the telemetry
+//! domain's `Telemetry` managed state, plus the `LogGuard` that keeps the
+//! background tracing writer alive for the app's lifetime.
+
 use std::collections::VecDeque;
 use std::sync::{LazyLock, Mutex};
 

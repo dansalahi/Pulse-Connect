@@ -1,3 +1,7 @@
+/**
+ * Renderer entry point: mounts the React tree and wires window-level error/
+ * rejection handlers to send telemetry breadcrumbs over IPC (best-effort only).
+ */
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";

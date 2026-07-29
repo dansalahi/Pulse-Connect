@@ -1,3 +1,7 @@
+//! Production `VoiceAdapter` implementation: emits Tauri events for the
+//! frontend to act on, since the actual LiveKit/WebRTC connection is driven
+//! from JS, not Rust.
+
 use std::sync::Arc;
 use tokio::sync::RwLock;
 

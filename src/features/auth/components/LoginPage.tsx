@@ -1,3 +1,7 @@
+/**
+ * Email/password login form shown by App when the user is unauthenticated;
+ * does client-side field validation and delegates the actual sign-in to authStore.
+ */
 import { type FormEvent, useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import styles from "./LoginPage.module.css";

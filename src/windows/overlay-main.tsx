@@ -1,3 +1,7 @@
+/**
+ * Entry point for the overlay pill window — a separate Tauri window/HTML
+ * root from the main app, bootstrapping only OverlayApp plus shared tokens.
+ */
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { OverlayApp } from "../features/overlay/components/OverlayApp";

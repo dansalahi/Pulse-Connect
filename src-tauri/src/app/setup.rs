@@ -1,3 +1,8 @@
+//! Tauri `setup()` hook, run once at startup: initializes logging and the
+//! crash panic hook, hides the overlay window, registers global hotkeys,
+//! kicks off auth bootstrap and the gateway connection, and (with `--debug`)
+//! opens the debug tools window.
+
 use tauri::Manager;
 
 use crate::app::state::{APP_START, COLD_START_MS};

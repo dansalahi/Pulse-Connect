@@ -1,3 +1,7 @@
+/**
+ * Modal rendered by MainLayout while signalingStore's callState is
+ * "incoming"; shows a countdown that auto-declines the call on timeout.
+ */
 import { useEffect, useState } from "react";
 import { useSignalingStore } from "../store/signalingStore";
 import styles from "./IncomingCallDialog.module.css";

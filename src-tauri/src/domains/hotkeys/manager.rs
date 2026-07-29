@@ -1,3 +1,8 @@
+//! Hotkeys domain business logic: registers/unregisters global OS shortcuts
+//! via `tauri-plugin-global-shortcut`, persists bindings, and emits frontend
+//! events on trigger. PTT has a special lifecycle — see `start`/`enable_ptt`/
+//! `disable_ptt` — since it's only bound while a call is active.
+
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
@@ -34,6 +39,9 @@ fn defaults() -> Vec<HotkeyBinding> {
     ]
 }
 
+// This is the only place that distinguishes key-down from key-up: Ptt emits
+// a distinct press/release pair (frontend unmutes on press, mutes on
+// release) while every other action only fires on Pressed.
 fn emit_for(app: &AppHandle, action: &HotkeyAction, state: ShortcutState) {
     let event = match (action, state) {
         (HotkeyAction::Mute,   ShortcutState::Pressed)  => "hotkey_mute",

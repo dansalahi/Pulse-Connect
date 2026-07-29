@@ -1,3 +1,8 @@
+/**
+ * Verifies mountEventBridge() dispatches each Tauri event to the correct
+ * store action (call signaling, overlay actions, hotkeys) and that the
+ * connected-call guards on hotkey handlers behave correctly.
+ */
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";

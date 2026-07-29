@@ -1,3 +1,7 @@
+/**
+ * Full-screen branded splash shown while the app boots (e.g. restoring the
+ * session) before routing to real content.
+ */
 import styles from "./LoadingScreen.module.css";
 
 export function LoadingScreen() {

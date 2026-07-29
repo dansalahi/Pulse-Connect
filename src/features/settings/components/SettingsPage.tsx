@@ -1,3 +1,8 @@
+/**
+ * Settings page: global hotkey rebinding (records key combos and persists
+ * them via IPC to the Rust global-hotkey manager), diagnostics export, and
+ * blocked-user management sourced from friendsStore.
+ */
 import { useEffect, useState } from "react";
 import { ipc } from "../../../lib/ipc/commands";
 import { useFriendsStore } from "../../friends/store/friendsStore";

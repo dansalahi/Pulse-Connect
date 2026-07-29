@@ -2,6 +2,11 @@ import { emit, listen } from "@tauri-apps/api/event";
 import type { Event, UnlistenFn } from "@tauri-apps/api/event";
 import type { Friend } from "../../features/friends/types/friends";
 
+/**
+ * Typed catalog and wrappers for every Tauri event the frontend listens to
+ * or emits; eventBridge.ts and window entry points consume this instead of
+ * calling the raw `@tauri-apps/api/event` functions directly.
+ */
 // ---------------------------------------------------------------------------
 // Typed catalog of every Tauri event used with listen()/emit() across the
 // frontend — main window call signaling, overlay button actions, global
@@ -64,6 +69,9 @@ export interface EventPayloadMap {
   overlay_update: OverlayUpdatePayload;
 }
 
+// Derived (not hand-maintained) so every event name is automatically backed
+// by a payload type — adding a case here is the only step needed to make
+// events.listen()/events.emit() type-check that event's payload elsewhere.
 export type AppEventName = keyof EventPayloadMap;
 
 /**

@@ -1,3 +1,8 @@
+/**
+ * Zustand store for the friend list, blocklist, and own presence status;
+ * applies friend actions optimistically against IPC calls and stays live via
+ * presence/connection Tauri events (see initListeners).
+ */
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { create } from "zustand";
 import { ipc } from "../../../lib/ipc/commands";

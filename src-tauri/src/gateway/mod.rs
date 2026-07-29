@@ -1,3 +1,7 @@
+//! The `Gateway`: owns the presence WebSocket connection lifecycle (connect,
+//! authenticate, reconnect with backoff) and hands inbound messages to the
+//! `Router` for domains to consume, independent of any specific domain.
+
 mod router;
 
 pub use router::Router;
@@ -21,6 +25,9 @@ const WS_URL: &str = "ws://localhost:3001";
 // Backoff
 // ---------------------------------------------------------------------------
 
+// Exponential backoff (1s, 2s, 4s, ... capped at 30s) so repeated failures
+// don't hammer the server; jitter is added on top so many clients
+// reconnecting after the same outage don't all retry in lockstep.
 fn backoff_base_ms(attempt: u32) -> u64 {
     (1_000u64 << attempt.min(5)).min(30_000)
 }

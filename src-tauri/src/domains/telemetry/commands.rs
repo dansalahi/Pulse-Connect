@@ -1,3 +1,7 @@
+//! Tauri commands for the telemetry domain: recording breadcrumbs into the
+//! ring buffer and bundling breadcrumbs, system info, and scrubbed logs into
+//! a diagnostics zip the user can send when reporting a problem.
+
 use chrono::Utc;
 
 use crate::shared::error::AppError;

@@ -4,6 +4,10 @@ import type { BlockedUser, Friend, MyStatus } from "../../features/friends/types
 import type { HotkeyAction, HotkeyBinding } from "../../features/settings/types/hotkeys";
 import type { VoiceJoinResponse, VoiceState } from "../../features/voice/types/voice";
 
+/**
+ * The single call surface for the Rust backend — every feature slice invokes
+ * Tauri commands through this object rather than calling `invoke` directly.
+ */
 // ---------------------------------------------------------------------------
 // Typed wrappers around every Tauri command invoked from the frontend,
 // grouped by backend domain (see src-tauri/src/{auth,friends,voice,overlay,

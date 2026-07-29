@@ -1,3 +1,7 @@
+/**
+ * Auth domain types shared between authStore and the Rust auth manager's
+ * IPC responses — keep in sync with the corresponding Rust structs/enums.
+ */
 export interface AuthUser {
   id: string;
   email: string;

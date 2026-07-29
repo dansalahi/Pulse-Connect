@@ -1,3 +1,8 @@
+/**
+ * Zustand store owning the live LiveKit room/session once signalingStore
+ * reaches "connected": device selection, mute/deafen, speaking detection,
+ * and mirroring participant state to the overlay window.
+ */
 import { create } from "zustand";
 import { ipc } from "../../../lib/ipc/commands";
 import { events } from "../../../lib/ipc/events";
@@ -369,6 +374,10 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
     },
 
+    // Absolute (not toggling) mute setter — used for push-to-talk, where the
+    // Rust hotkey manager fires hotkey_ptt_press/hotkey_ptt_release on
+    // key-down/key-up (see eventBridge.ts) and each edge must force a known
+    // state rather than flip whatever toggleMute last left it in.
     setMuted: async (muted: boolean) => {
       if (muteToggleInProgress) return;
       muteToggleInProgress = true;

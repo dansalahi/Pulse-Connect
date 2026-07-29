@@ -1,3 +1,8 @@
+/**
+ * Zustand store owning auth/session state; delegates credential checks and
+ * session persistence to the Rust auth manager over IPC rather than holding
+ * tokens client-side.
+ */
 import { create } from "zustand";
 import { ipc } from "../../../lib/ipc/commands";
 import type { AppError, AuthUser } from "../types/auth";
@@ -43,6 +48,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
+  // Called once on app start (see App.tsx). Asks the Rust auth manager for a
+  // session restored from its own persisted/keychain-backed token rather than
+  // anything stored in the renderer, so a null result just means "logged out".
   bootstrap: async () => {
     set({ isLoading: true });
     try {

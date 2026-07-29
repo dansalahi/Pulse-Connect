@@ -1,3 +1,6 @@
+//! Tauri command wrappers for the auth domain: validate IPC input, record
+//! telemetry, and delegate to `AuthManager` for login/logout/session lookup.
+
 use crate::domains::telemetry::Telemetry;
 use crate::shared::error::AppError;
 use crate::shared::validation::validate_string;

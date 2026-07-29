@@ -1,3 +1,7 @@
+//! Tauri commands for the voice domain: requesting LiveKit tokens and driving
+//! join/leave/mute/deafen through `VoiceManager`, plus call invite/respond/cancel
+//! signaling against the mock backend's HTTP API.
+
 use serde::{Deserialize, Serialize};
 
 use crate::domains::auth::AuthManager;

@@ -1,3 +1,7 @@
+//! `VoiceManager`, the voice domain's managed Tauri state: holds call state
+//! (current room, mute/deafen) and owns the active `VoiceAdapter`, selected
+//! once at startup based on environment.
+
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -11,6 +15,11 @@ use super::stub::StubAdapter;
 // VoiceManager — managed Tauri state
 // ---------------------------------------------------------------------------
 
+/// The adapter is stored behind the `VoiceAdapter` trait object so
+/// `commands.rs` and other callers only ever talk to "the active adapter" —
+/// they never branch on or need to know whether LiveKit or the stub is
+/// running underneath.
+///
 /// Uses Arc<dyn VoiceAdapter> (not Box) so VoiceManager can derive Clone,
 /// which Tauri's .manage() requires.
 ///

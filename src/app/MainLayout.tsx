@@ -1,3 +1,8 @@
+/**
+ * Post-login shell: sidebar navigation, presence/status switcher, and the
+ * friends/settings/voice page router, plus global overlays (incoming call
+ * dialog, toasts, sign-out confirmation) that must render above any page.
+ */
 import { useEffect, useRef, useState } from "react";
 import { ConfirmDialog } from "../ui/ConfirmDialog";
 import { IncomingCallDialog } from "../features/voice/components/IncomingCallDialog";
